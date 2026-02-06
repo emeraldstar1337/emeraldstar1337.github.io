@@ -1,0 +1,150 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #14101c, #05050a);
+  color: #d8d8e6;
+  font-family: 'JetBrains Mono', monospace;
+  overflow-x: hidden;
+}
+
+/* NOISE */
+.noise {
+  position: fixed;
+  inset: 0;
+  background: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wrap {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 110px 24px;
+}
+
+/* CHROME SHADER */
+.chrome {
+  font-size: 56px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  background: linear-gradient(
+    120deg,
+    #777 0%,
+    #eee 20%,
+    #999 40%,
+    #fff 50%,
+    #666 60%,
+    #bbb 80%,
+    #777 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: chromeMove 6s linear infinite;
+  text-shadow:
+    0 0 8px rgba(170,120,255,0.7),
+    0 0 30px rgba(120,80,255,0.4);
+}
+
+@keyframes chromeMove {
+  to { background-position: -200% center; }
+}
+
+.cursor {
+  -webkit-text-fill-color: #d8d8e6;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+.force {
+  margin-top: 12px;
+  font-size: 13px;
+  opacity: 0.25;
+  letter-spacing: 0.14em;
+  color: #c4b0ff;
+}
+
+/* ABOUT */
+.about {
+  margin-top: 80px;
+  font-size: 18px;
+  opacity: 0.85;
+}
+
+/* SYSTEM */
+.system {
+  margin-top: 50px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+.system span { opacity: 0.4; margin-right: 8px; }
+
+/* LINKS */
+.links {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.links a {
+  color: #d8d8e6;
+  text-decoration: none;
+}
+.links a:hover {
+  text-shadow: 0 0 14px rgba(170,120,255,0.8);
+}
+.links small {
+  display: block;
+  font-size: 11px;
+  opacity: 0.4;
+}
+
+/* IMPORTANT */
+.important {
+  margin-top: 50px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+.important span { opacity: 0.4; }
+
+/* DR PEPPER */
+.pepper {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+}
+.pepper img {
+  width: 120px;
+  animation: spin 18s linear infinite;
+  filter: drop-shadow(0 0 35px rgba(170,120,255,0.45));
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* DEATH STAR */
+#death-star {
+  position: fixed;
+  width: 200px;
+  height: 200px;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 30px rgba(170,120,255,0.6));
+  animation: slowSpin 20s linear infinite;
+  transition: opacity 0.3s;
+}
+@keyframes slowSpin { to { transform: rotate(360deg); } }
+
+/* IDLE */
+#idle {
+  position: fixed;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  opacity: 0;
+  transition: all 1.6s ease;
+}
