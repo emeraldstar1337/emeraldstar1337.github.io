@@ -1,136 +1,117 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>the emerald star</title>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Roboto+Flex:opsz,wght@8..144,300;8..144,600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE EMERALD STAR</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- chrome image backdrop (put assets/chrome.jpg) -->
-  <div class="chrome-backdrop" aria-hidden="true"></div>
 
-  <main class="page">
-    <header class="hero">
-      <h1 class="title chrome-text" aria-label="the emerald star">
-        the emerald <span class="star">star</span><span class="cursor" aria-hidden="true"></span>
-      </h1>
-      <div class="force">May the Force be with you.</div>
-    </header>
+    <div class="bg-layer"></div>
 
-    <section class="about">
-      <p class="lead">Don't tread on me</p>
-    </section>
+    <div id="idle-overlay" class="hidden">
+        <div class="idle-text">Jonh Banan 773 is here.</div>
+    </div>
 
-    <section class="grid">
-      <div class="card system">
-        <div class="card-row">
-          <div class="card-icon">
-            <!-- Fedora icon (simple svg) -->
-            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="#5fa" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c2.6 0 4.98-.97 6.8-2.58C15.9 19.9 13.0 22 12 22 6.48 22 2 17.52 2 12S6.48 2 12 2z"/></svg>
-          </div>
-          <div>
-            <div class="label">OS</div>
-            <div class="value">Fedora • Windows 11</div>
-          </div>
+    <div id="death-star-container"></div>
+
+    <main class="container">
+        
+        <section class="hero">
+            <h1 class="chrome-text">
+                the emerald <span class="trigger-word" id="star-trigger">star</span><span class="cursor">▍</span>
+            </h1>
+            <p class="subtitle">May the Force be with you.</p>
+        </section>
+
+        <section class="glass-card about-card">
+            <p>Don't tread on me</p>
+        </section>
+
+        <div class="bento-grid">
+            
+            <div class="glass-card spec-card">
+                <h3>System</h3>
+                <div class="spec-list">
+                    <div class="spec-item">
+                        <i class="fab fa-fedora"></i>
+                        <span>Fedora</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fab fa-windows"></i>
+                        <span>Windows 11</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card spec-card">
+                <h3>Mobile</h3>
+                <div class="spec-list">
+                    <div class="spec-item">
+                        <i class="fab fa-android"></i>
+                        <span>Pixel 8 Pro</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card model-card" id="canvas-container">
+                </div>
         </div>
 
-        <div class="card-row">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="#9aa7ff" d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/></svg>
-          </div>
-          <div>
-            <div class="label">Phone</div>
-            <div class="value">Google Pixel 8 Pro</div>
-          </div>
+        <div class="links-stack">
+            
+            <a href="https://t.me/emeraldfall" target="_blank" class="glass-card link-card">
+                <div class="link-icon"><i class="fab fa-telegram-plane"></i></div>
+                <div class="link-info">
+                    <span class="link-title">Telegram</span>
+                    <span class="link-sub">@emeraldfall</span>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://open.spotify.com/playlist/6LHHmGnB7rndcD5PDrdv7T?si=56d65c3460734f97" target="_blank" class="glass-card link-card">
+                <div class="link-icon"><i class="fab fa-spotify"></i></div>
+                <div class="link-info">
+                    <span class="link-title">Spotify Playlist</span>
+                    <span class="link-sub">plays well in the dark</span>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://steamcommunity.com/id/lordpavv" target="_blank" class="glass-card link-card">
+                <div class="link-icon"><i class="fab fa-steam"></i></div>
+                <div class="link-info">
+                    <span class="link-title">Steam</span>
+                    <span class="link-sub">LordPavv</span>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
         </div>
-      </div>
 
-      <div class="card links-card">
-        <div class="card-row link-row">
-          <div class="card-icon small">
-            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#A6C8FF" d="M2 12l20-7-4 20L11 15z"/></svg>
-          </div>
-          <div class="link-content">
-            <a class="link" href="https://t.me/emeraldfall" target="_blank" rel="noreferrer">Telegram</a>
-            <div class="small">t.me/emeraldfall</div>
-          </div>
+        <div class="glass-card restricted-card">
+            <div class="status-dot"></div>
+            <span>Important information [ access restricted ]</span>
         </div>
 
-        <div class="card-row link-row">
-          <div class="card-icon small">
-            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#B1FFCE" d="M12 3C6.48 3 2 6.98 2 11.5S6.48 20 12 20s10-3.98 10-8.5S17.52 3 12 3z"/></svg>
-          </div>
-          <div class="link-content">
-            <a class="link" href="https://open.spotify.com/playlist/6LHHmGnB7rndcD5PDrdv7T?si=56d65c3460734f97" target="_blank" rel="noreferrer">Spotify Playlist</a>
-            <div class="small">plays well in the dark</div>
-          </div>
-        </div>
+    </main>
 
-        <div class="card-row link-row">
-          <div class="card-icon small">
-            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#D7E0FF" d="M9 12a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
-          </div>
-          <div class="link-content">
-            <a class="link" href="https://steamcommunity.com/id/lordpavv" target="_blank" rel="noreferrer">Steam</a>
-            <div class="small">lordpavv</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="important card muted">
-      <div>Important information <span class="restricted">[ access restricted ]</span></div>
-    </section>
-
-    <!-- 3D Dr Pepper area: canvas injected by script -->
-    <section class="pepper-3d card">
-      <div id="pepper-canvas" class="pepper-canvas" aria-hidden="true"></div>
-      <noscript class="small muted">3D model requires JavaScript.</noscript>
-    </section>
-
-    <footer class="footer muted">© the emerald star</footer>
-  </main>
-
-  <!-- Death Star SVG (rotates around its axis when visible) -->
-  <svg id="death-star" viewBox="0 0 200 200" aria-hidden="true">
-    <defs>
-      <radialGradient id="ds-metal" cx="35%" cy="30%">
-        <stop offset="0%" stop-color="#bdbdbd"/>
-        <stop offset="60%" stop-color="#333"/>
-        <stop offset="100%" stop-color="#050505"/>
-      </radialGradient>
-      <filter id="grain">
-        <feTurbulence baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
-        <feColorMatrix values="0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0 0.95  0 0 0 1 0"/>
-        <feBlend in="SourceGraphic" mode="overlay"/>
-      </filter>
-    </defs>
-
-    <g id="ds-core">
-      <circle cx="100" cy="100" r="86" fill="url(#ds-metal)"/>
-      <path d="M12,100 a88,18 0 0,0 176,0" fill="none" stroke="#2a2a2a" stroke-width="7"/>
-      <circle cx="132" cy="72" r="22" fill="#101010" stroke="#333" stroke-width="1.6"/>
-      <g stroke="#2b2b2b" stroke-width="1.0" opacity="0.8">
-        <path d="M40 50 L90 54"/>
-        <path d="M60 140 L110 135"/>
-        <path d="M30 110 L170 110"/>
-        <path d="M80 40 L120 42"/>
-      </g>
-      <ellipse cx="74" cy="60" rx="36" ry="12" fill="rgba(255,255,255,0.04)"/>
-    </g>
-  </svg>
-
-  <!-- Idle message -->
-  <div id="idle" aria-hidden="true">Jonh Banan 773 is here.</div>
-
-  <!-- script is module (loads three.js GLTFLoader) -->
-  <script type="module" src="script.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
