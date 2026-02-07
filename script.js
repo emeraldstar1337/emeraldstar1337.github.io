@@ -52,7 +52,7 @@ function init3D() {
         const box = new THREE.Box3().setFromObject(deathStar);
         const center = box.getCenter(new THREE.Vector3());
         deathStar.position.sub(center);
-        deathStar.scale.set(2.5, 2.5, 2.5);
+        deathStar.scale.set(2.8, 2.8, 2.8);
         dsScene.add(deathStar);
     }, undefined, () => {
         deathStar = new THREE.Mesh(
@@ -65,7 +65,7 @@ function init3D() {
 
 function animate() {
     requestAnimationFrame(animate);
-    if (pepperCan) pepperCan.rotation.y += 0.008;
+    if (pepperCan) pepperCan.rotation.y += 0.01;
     if (deathStar) deathStar.rotation.y += 0.005;
     renderer.render(scene, camera);
     dsRenderer.render(dsScene, dsCamera);
