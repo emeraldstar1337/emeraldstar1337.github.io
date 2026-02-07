@@ -60,23 +60,34 @@ function init3D() {
     dsl2.position.set(-5, -3, 5);
     dsScene.add(dsl2);
 
+    // Create fallback immediately for testing
+    deathStar = new THREE.Mesh(
+        new THREE.SphereGeometry(4, 32, 32),
+        new THREE.MeshStandardMaterial({ 
+            color: 0x888888, 
+            metalness: 0.7, 
+            roughness: 0.3,
+            emissive: 0x222222
+        })
+    );
+    dsScene.add(deathStar);
+    console.log('✓ Fallback Death Star created and added to scene');
+
     loader.load('assets/death_star.glb', (gltf) => {
+        // Remove fallback
+        dsScene.remove(deathStar);
+        
         deathStar = gltf.scene;
         const box = new THREE.Box3().setFromObject(deathStar);
         const center = box.getCenter(new THREE.Vector3());
         deathStar.position.sub(center);
         deathStar.scale.set(3.5, 3.5, 3.5);
         dsScene.add(deathStar);
-        console.log('Death Star model loaded successfully');
+        console.log('✓ Death Star GLB model loaded and replaced fallback');
     }, (progress) => {
         console.log('Loading death star:', (progress.loaded / progress.total * 100) + '%');
     }, (error) => {
-        console.log('Death Star model not found, using fallback sphere');
-        deathStar = new THREE.Mesh(
-            new THREE.SphereGeometry(3.5, 32, 32),
-            new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.7, roughness: 0.3 })
-        );
-        dsScene.add(deathStar);
+        console.log('⚠️ Death Star GLB not found, using fallback sphere');
     });
 
     window.addEventListener('resize', () => {
