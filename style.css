@@ -64,15 +64,10 @@ body {
 @keyframes chrome-shine { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 0% 100%; } }
 
 #star-trigger {
-    background: linear-gradient(to bottom, #fff 0%, #fff 45%, #888 50%, #333 55%, #fff 100%);
-    background-size: 100% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     cursor: pointer;
     position: relative;
     z-index: 100;
-    display: inline-block;
+    display: inline;
 }
 
 .cursor {
@@ -119,18 +114,33 @@ body {
 #snake-img {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.1);
-    width: 200px;
+    left: calc(100% + 20px);
+    transform: translateY(-50%) scale(0);
+    width: 180px;
+    height: 120px;
     opacity: 0;
     pointer-events: none;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 5;
+    z-index: 10;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
 }
 
 #snake-img.visible {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateY(-50%) scale(1);
+}
+
+@media (max-width: 768px) {
+    #snake-img {
+        left: 50%;
+        top: calc(100% + 20px);
+        transform: translate(-50%, 0) scale(0);
+    }
+    
+    #snake-img.visible {
+        transform: translate(-50%, 0) scale(1);
+    }
 }
 
 .system-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
