@@ -1,128 +1,109 @@
 let scene, camera, renderer, pepperCan;
 let dsScene, dsCamera, dsRenderer, deathStar;
 
-// Инициализация 3D
 function init3D() {
-    // 1. Сцена для Dr Pepper
+    // DR PEPPER SCENE
     const container = document.getElementById('pepper-canvas-container');
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(40, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-    camera.position.z = 5;
+    camera = new THREE.PerspectiveCamera(35, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+    camera.position.set(0, 0, 4.5);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container.offsetWidth, container.offsetHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
 
-    // Свет
-    const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+    const ambient = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambient);
-    const point = new THREE.PointLight(0xbc6ff1, 2);
-    point.position.set(2, 2, 2);
-    scene.add(point);
+    const spot = new THREE.SpotLight(0xbc6ff1, 2);
+    spot.position.set(5, 5, 5);
+    scene.add(spot);
 
-    // Создаем банку программно (цилиндр), если GLB не подгрузится, 
-    // чтобы она ГАРАНТИРОВАННО была видна.
-    const geometry = new THREE.CylinderGeometry(1, 1, 2.2, 32);
-    const material = new THREE.MeshStandardMaterial({ 
-        color: 0x8b0000, 
-        metalness: 0.9, 
-        roughness: 0.1,
-        emissive: 0x220000 
+    // Load User's Dr Pepper Model
+    const loader = new THREE.GLTFLoader();
+    loader.load('assets/dr_pepper_can.glb', (gltf) => {
+        pepperCan = gltf.scene;
+        pepperCan.scale.set(1.5, 1.5, 1.5);
+        scene.add(pepperCan);
+    }, undefined, (err) => {
+        // Fallback: Elegant cylinder if model is missing
+        const geo = new THREE.CylinderGeometry(0.8, 0.8, 2, 32);
+        const mat = new THREE.MeshStandardMaterial({ color: 0x7a0000, metalness: 1, roughness: 0.2 });
+        pepperCan = new THREE.Mesh(geo, mat);
+        scene.add(pepperCan);
     });
-    pepperCan = new THREE.Mesh(geometry, material);
-    scene.add(pepperCan);
 
-    // 2. Сцена для Звезды Смерти
+    // DEATH STAR SCENE
     const dsContainer = document.getElementById('death-star-overlay');
     dsScene = new THREE.Scene();
-    dsCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-    dsCamera.position.z = 3;
+    dsCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
+    dsCamera.position.z = 4;
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    dsRenderer.setSize(300, 300);
+    dsRenderer.setSize(350, 350);
     dsContainer.appendChild(dsRenderer.domElement);
 
-    const dsLight = new THREE.DirectionalLight(0xffffff, 1);
-    dsLight.position.set(5, 5, 5);
+    const dsLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    dsLight.position.set(5, 3, 5);
     dsScene.add(dsLight);
-    dsScene.add(new THREE.AmbientLight(0xbc6ff1, 0.5));
+    dsScene.add(new THREE.AmbientLight(0xbc6ff1, 0.3));
 
-    // Создаем "красивую" звезду смерти через геометрию
-    const dsGeo = new THREE.SphereGeometry(1, 32, 32);
-    const dsMat = new THREE.MeshStandardMaterial({ 
-        color: 0x333333, 
-        metalness: 1, 
-        roughness: 0.4,
-        wireframe: true // Технологичный вид
-    });
+    // Proper Death Star Build
     deathStar = new THREE.Group();
-    const core = new THREE.Mesh(dsGeo, dsMat);
+    const sphereGeo = new THREE.SphereGeometry(1.2, 50, 50);
+    const sphereMat = new THREE.MeshStandardMaterial({ color: 0x222222, wireframe: true });
+    const body = new THREE.Mesh(sphereGeo, sphereMat);
     
-    // Добавляем "впадину" для лазера
-    const laserGeo = new THREE.CircleGeometry(0.3, 32);
-    const laserMat = new THREE.MeshBasicMaterial({ color: 0xbc6ff1, side: THREE.DoubleSide });
-    const laserHole = new THREE.Mesh(laserGeo, laserMat);
-    laserHole.position.set(0.5, 0.5, 0.8);
+    // Dish (The Superlaser) - correctly positioned
+    const dishGeo = new THREE.SphereGeometry(0.35, 32, 32, 0, Math.PI * 2, 0, 0.5);
+    const dishMat = new THREE.MeshStandardMaterial({ color: 0x444444, side: THREE.DoubleSide });
+    const dish = new THREE.Mesh(dishGeo, dishMat);
     
-    deathStar.add(core);
-    deathStar.add(laserHole);
+    // Position it in the northern hemisphere
+    dish.position.set(0.6, 0.7, 0.8);
+    dish.lookAt(0, 0, 0); 
+    dish.position.multiplyScalar(1.05); // slightly push out
+
+    deathStar.add(body);
+    deathStar.add(dish);
     dsScene.add(deathStar);
 }
 
 function animate() {
     requestAnimationFrame(animate);
     if (pepperCan) {
-        pepperCan.rotation.y += 0.02;
-        pepperCan.rotation.z = Math.sin(Date.now() * 0.001) * 0.1;
+        pepperCan.rotation.y += 0.015;
     }
     if (deathStar) {
-        deathStar.rotation.y += 0.01;
+        deathStar.rotation.y += 0.007;
     }
     renderer.render(scene, camera);
     dsRenderer.render(dsScene, dsCamera);
 }
 
-// Пасхалка: Star
+// Interactivity
 const trigger = document.getElementById('star-trigger');
 const overlay = document.getElementById('death-star-overlay');
+trigger.onmouseenter = () => overlay.classList.add('visible');
+trigger.onmouseleave = () => overlay.classList.remove('visible');
 
-const showStar = () => overlay.classList.add('visible');
-const hideStar = () => overlay.classList.remove('visible');
-
-trigger.addEventListener('mouseenter', showStar);
-trigger.addEventListener('mouseleave', hideStar);
-trigger.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    overlay.classList.toggle('visible');
-});
-
-// Пасхалка: John Banan
-let bananShown = false;
+// Idle Easter Egg
 let idleTime = 0;
-
-document.onmousemove = document.onkeypress = document.ontouchstart = () => {
-    idleTime = 0;
-};
-
+document.onmousemove = () => idleTime = 0;
 setInterval(() => {
     idleTime++;
-    if (idleTime > 15 && !bananShown) {
+    if (idleTime > 15) {
         const banan = document.getElementById('john-banan');
         banan.classList.add('active');
-        bananShown = true;
-        
-        banan.onclick = () => {
-            banan.classList.add('fly');
-        };
+        banan.onclick = () => banan.classList.add('fly');
     }
 }, 1000);
 
-// Parallax
+// Parallax background
 document.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 20;
-    const y = (e.clientY / window.innerHeight - 0.5) * 20;
-    document.getElementById('bg').style.transform = `translate(${x}px, ${y}px) scale(1.1)`;
+    const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+    const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+    document.getElementById('bg').style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
 });
 
 init3D();
