@@ -15,14 +15,14 @@ function init3D() {
 
     scene.add(new THREE.AmbientLight(0xffffff, 1.5));
     const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5,5,5);
+    light.position.set(5, 5, 5);
     scene.add(light);
 
     const loader = new THREE.GLTFLoader();
 
     loader.load('assets/dr_pepper_can.glb', gltf => {
         pepperCan = gltf.scene;
-        pepperCan.scale.set(1.8,1.8,1.8);
+        pepperCan.scale.set(1.8, 1.8, 1.8);
         scene.add(pepperCan);
     });
 
@@ -30,7 +30,8 @@ function init3D() {
 
     dsScene = new THREE.Scene();
     dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-    dsCamera.position.set(0,0,20);
+    dsCamera.position.set(0, 0, 45);
+    dsCamera.lookAt(0, 0, 0);
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     dsRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -39,12 +40,12 @@ function init3D() {
 
     dsScene.add(new THREE.AmbientLight(0xffffff, 1.4));
     const d1 = new THREE.DirectionalLight(0xffffff, 1.2);
-    d1.position.set(5,5,5);
+    d1.position.set(5, 5, 5);
     dsScene.add(d1);
 
     loader.load('assets/death_star.glb', gltf => {
         deathStar = gltf.scene;
-        deathStar.scale.set(4,4,4);
+        deathStar.scale.set(4, 4, 4);
         dsScene.add(deathStar);
     });
 }
@@ -65,34 +66,7 @@ trigger.addEventListener('mouseleave', () => dsOverlay.classList.remove('visible
 trigger.addEventListener('touchstart', e => {
     e.preventDefault();
     dsOverlay.classList.toggle('visible');
-},{passive:false});
-
-const snakeTrigger = document.getElementById('snake-trigger');
-const snakeImg = document.getElementById('snake-img');
-const container = document.querySelector('.container');
-
-snakeTrigger.onclick = () => {
-    snakeImg.classList.add('visible');
-    if (window.innerWidth <= 768) container.classList.add('flag-active');
-    setTimeout(()=>{
-        snakeImg.classList.remove('visible');
-        container.classList.remove('flag-active');
-    },2000);
-};
-
-let idleTime = 0;
-const banan = document.getElementById('john-banan');
-
-document.addEventListener('mousemove',()=>idleTime=0);
-setInterval(()=>{
-    idleTime++;
-    if(idleTime>15) banan.classList.add('active');
-},1000);
-
-banan.onclick = () => {
-    banan.classList.remove('active');
-    idleTime = 0;
-};
+}, { passive: false });
 
 init3D();
 animate();
