@@ -60,35 +60,72 @@ function init3D() {
     dsl2.position.set(-5, -3, 5);
     dsScene.add(dsl2);
 
-    // Create fallback immediately for testing
-    deathStar = new THREE.Mesh(
-        new THREE.SphereGeometry(4, 32, 32),
+    // Create Death Star from basic geometry - always works
+    const deathStarGroup = new THREE.Group();
+    
+    // Main sphere
+    const mainSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(4, 64, 64),
         new THREE.MeshStandardMaterial({ 
-            color: 0x888888, 
-            metalness: 0.7, 
-            roughness: 0.3,
-            emissive: 0x222222
+            color: 0x555555, 
+            metalness: 0.6, 
+            roughness: 0.4,
+            emissive: 0x111111
         })
     );
-    dsScene.add(deathStar);
-    console.log('✓ Fallback Death Star created and added to scene');
-
-    loader.load('assets/death_star.glb', (gltf) => {
-        // Remove fallback
-        dsScene.remove(deathStar);
-        
-        deathStar = gltf.scene;
-        const box = new THREE.Box3().setFromObject(deathStar);
-        const center = box.getCenter(new THREE.Vector3());
-        deathStar.position.sub(center);
-        deathStar.scale.set(3.5, 3.5, 3.5);
-        dsScene.add(deathStar);
-        console.log('✓ Death Star GLB model loaded and replaced fallback');
-    }, (progress) => {
-        console.log('Loading death star:', (progress.loaded / progress.total * 100) + '%');
-    }, (error) => {
-        console.log('⚠️ Death Star GLB not found, using fallback sphere');
+    deathStarGroup.add(mainSphere);
+    
+    // Equator trench
+    const trenchGeometry = new THREE.TorusGeometry(4.05, 0.15, 16, 100);
+    const trenchMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x222222,
+        metalness: 0.8,
+        roughness: 0.3
     });
+    const trench = new THREE.Mesh(trenchGeometry, trenchMaterial);
+    trench.rotation.x = Math.PI / 2;
+    deathStarGroup.add(trench);
+    
+    // Superlaser dish (concave)
+    const dishGeometry = new THREE.SphereGeometry(1.2, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+    const dishMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x333333,
+        metalness: 0.9,
+        roughness: 0.2,
+        emissive: 0x00ff00,
+        emissiveIntensity: 0.2
+    });
+    const dish = new THREE.Mesh(dishGeometry, dishMaterial);
+    dish.rotation.x = Math.PI;
+    dish.position.set(2, 2, 2);
+    deathStarGroup.add(dish);
+    
+    // Surface details - random panels
+    for (let i = 0; i < 50; i++) {
+        const panel = new THREE.Mesh(
+            new THREE.BoxGeometry(0.3, 0.3, 0.05),
+            new THREE.MeshStandardMaterial({ 
+                color: Math.random() > 0.5 ? 0x444444 : 0x333333,
+                metalness: 0.7,
+                roughness: 0.5
+            })
+        );
+        
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
+        const radius = 4.08;
+        
+        panel.position.x = radius * Math.sin(phi) * Math.cos(theta);
+        panel.position.y = radius * Math.sin(phi) * Math.sin(theta);
+        panel.position.z = radius * Math.cos(phi);
+        
+        panel.lookAt(0, 0, 0);
+        deathStarGroup.add(panel);
+    }
+    
+    deathStar = deathStarGroup;
+    dsScene.add(deathStar);
+    console.log('✓ Procedural Death Star created successfully');
 
     window.addEventListener('resize', () => {
         const width = container.offsetWidth;
