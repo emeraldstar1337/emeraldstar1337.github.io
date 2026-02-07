@@ -1,7 +1,6 @@
 :root {
     --bg-dark: #020202;
     --accent-purple: #bc6ff1;
-    --chrome-text: #e0e0e0;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
@@ -14,20 +13,21 @@ body {
     min-height: 100vh;
 }
 
+/* BACKGROUND */
 .parallax-bg {
     position: fixed;
     inset: -10%;
     width: 120%;
     height: 120%;
     background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000') center/cover no-repeat;
-    filter: blur(80px) brightness(0.15);
+    filter: blur(80px) brightness(0.12);
     z-index: -2;
 }
 
 .glow-overlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 50% 10%, rgba(188, 111, 241, 0.12) 0%, transparent 60%);
+    background: radial-gradient(circle at 50% 10%, rgba(188, 111, 241, 0.1) 0%, transparent 60%);
     z-index: -1;
 }
 
@@ -37,30 +37,25 @@ body {
     padding: 50px 20px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
-.hero { text-align: center; margin-bottom: 15px; }
-
-/* CHROME TITLE */
+/* HERO & CHROME */
+.hero { text-align: center; margin-bottom: 10px; }
 .chrome-title {
     font-size: clamp(2rem, 9vw, 2.8rem);
     font-weight: 700;
     letter-spacing: -1.5px;
-    position: relative;
-    display: inline-block;
-    background: linear-gradient(to bottom, #fff 0%, #fff 45%, #999 50%, #444 55%, #fff 100%);
+    background: linear-gradient(to bottom, #fff 0%, #fff 45%, #888 50%, #333 55%, #fff 100%);
     background-size: 100% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: chrome-shine 6s ease-in-out infinite;
 }
-
 @keyframes chrome-shine { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 0% 100%; } }
 
 .cursor {
-    -webkit-text-fill-color: initial;
-    color: #fff; /* Хром-цвет */
+    color: #fff;
     animation: blink 0.8s step-end infinite;
     font-weight: 200;
     margin-left: 2px;
@@ -69,82 +64,93 @@ body {
 
 .subtitle {
     font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.25);
-    margin-top: -2px;
+    color: rgba(255, 255, 255, 0.2);
+    margin-top: -4px;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 
-/* CARDS */
+/* CARDS (Material You 3 Expressive) */
 .card {
     background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 28px;
-    padding: 18px;
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px; /* Material You 3 Rounded */
+    padding: 20px;
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
-.card:hover { transform: translateY(-2px); border-color: rgba(188, 111, 241, 0.3); }
+.card:hover { transform: scale(1.02); background: rgba(255, 255, 255, 0.05); border-color: rgba(188, 111, 241, 0.3); }
 
-.about-card { text-align: center; font-size: 0.85rem; color: #aaa; }
-
+/* SYSTEM CHIPS */
 .system-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.label { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+.label { color: rgba(255,255,255,0.25); font-size: 0.75rem; }
+.chips { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
 .chip {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 0.75rem;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     border: 1px solid rgba(255,255,255,0.05);
 }
 .chip img { width: 14px; height: 14px; }
 
+/* LINKS */
 .links-grid { display: flex; flex-direction: column; gap: 8px; }
-.link-card { text-decoration: none; color: #fff; padding: 14px 20px; }
-.link-inner { display: flex; align-items: center; gap: 12px; }
-.link-inner img { width: 18px; opacity: 0.7; }
+.link-card { text-decoration: none; color: #fff; padding: 16px 24px; border-radius: 24px; }
+.link-inner { display: flex; align-items: center; gap: 14px; }
+.link-inner img { width: 18px; opacity: 0.8; }
 
-.important-card { border: 1px dashed rgba(188, 111, 241, 0.2); text-align: center; }
-.glitch-text { color: var(--accent-purple); font-size: 0.7rem; opacity: 0.6; }
+/* IMPORTANT INFO */
+.important-card { text-decoration: none; border: 1px dashed rgba(188, 111, 241, 0.4); }
+.restricted-box { text-align: center; }
+.glitch-text { color: var(--accent-purple); font-size: 0.75rem; font-weight: 500; }
 
-/* DR PEPPER */
-.pepper-card {
-    height: 160px;
-    padding: 0;
-    overflow: hidden;
-    position: relative;
-}
+/* 3D DR PEPPER */
+.pepper-card { height: 220px; padding: 0; }
 #pepper-canvas-container { width: 100%; height: 100%; }
-.card-label { position: absolute; bottom: 10px; right: 15px; font-size: 0.55rem; color: rgba(255,255,255,0.2); }
+.card-label { position: absolute; bottom: 12px; right: 20px; font-size: 0.55rem; color: rgba(255,255,255,0.2); }
 
-/* JOHN BANAN - CHROME STYLE */
-#john-banan {
-    position: fixed;
-    top: -80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(145deg, #1a1a1a, #050505);
-    color: #fff;
-    border: 1px solid #bc6ff1;
-    padding: 12px 28px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    box-shadow: 0 10px 30px rgba(188, 111, 241, 0.3), inset 0 0 10px rgba(188, 111, 241, 0.2);
-    z-index: 1000;
-    transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+/* SNAKE ANIMATION */
+#snake-container {
+    position: absolute;
+    bottom: -50px; left: -100px;
+    width: 80px; height: 40px;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Gadsden_flag.svg/100px-Gadsden_flag.svg.png') no-repeat center/contain;
+    pointer-events: none;
+    z-index: 10;
 }
-#john-banan.active { top: 30px; }
-#john-banan.fly { transform: translateX(-50%) translateY(-300px); opacity: 0; }
+.snake-crawl { animation: crawl 3s linear forwards; }
+@keyframes crawl {
+    0% { left: -100px; bottom: 5px; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 500px; bottom: 15px; opacity: 0; }
+}
 
+/* DEATH STAR */
 #death-star-overlay {
     position: fixed;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 350px; height: 350px;
+    width: 400px; height: 400px;
     pointer-events: none; z-index: 100;
     opacity: 0; transition: opacity 0.5s ease;
 }
 #death-star-overlay.visible { opacity: 1; }
+
+/* JOHN BANAN */
+#john-banan {
+    position: fixed;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(145deg, #1a1a1a, #050505);
+    color: #fff; border: 1px solid #bc6ff1;
+    padding: 12px 28px; border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(188, 111, 241, 0.3);
+    z-index: 1000; transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
+#john-banan.active { top: 30px; }
