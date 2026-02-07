@@ -120,20 +120,29 @@ function init3D() {
 
     deathStar = createProceduralDeathStar();
     dsScene.add(deathStar);
+    console.log('Fallback Death Star создана');
 
     loader.load('assets/death_star.glb', 
         (gltf) => {
+            console.log('GLB Death Star загружена успешно!');
             dsScene.remove(deathStar);
             deathStar = gltf.scene;
             const box = new THREE.Box3().setFromObject(deathStar);
             const center = box.getCenter(new THREE.Vector3());
+            const size = new THREE.Vector3();
+            box.getSize(size);
             deathStar.position.sub(center);
             deathStar.scale.set(0.4, 0.4, 0.4);
             dsScene.add(deathStar);
+            console.log('GLB Death Star добавлена в сцену, размер:', size);
         },
-        undefined,
+        (progress) => {
+            const percent = (progress.loaded / progress.total * 100).toFixed(0);
+            console.log(`Death Star загрузка: ${percent}%`);
+        },
         (error) => {
-            console.log('Using fallback Death Star');
+            console.error('Ошибка загрузки Death Star GLB:', error);
+            console.log('Используется fallback модель');
         }
     );
 
