@@ -1,100 +1,98 @@
-let scene,camera,renderer,pepper;
-let dsScene,dsCamera,dsRenderer,deathStar;
+let scene, camera, renderer, pepperCan;
+let dsScene, dsCamera, dsRenderer, deathStar;
 
-function initPepper(){
-    const c=document.getElementById('pepper-canvas-container');
-    scene=new THREE.Scene();
-    camera=new THREE.PerspectiveCamera(35,c.clientWidth/c.clientHeight,.1,100);
-    camera.position.z=8;
-    renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
-    renderer.setSize(c.clientWidth,c.clientHeight);
-    c.appendChild(renderer.domElement);
-    scene.add(new THREE.AmbientLight(0xffffff,1.2));
-    const g=new THREE.CylinderGeometry(1,1,2.5,32);
-    const m=new THREE.MeshStandardMaterial({color:0x7a0000,metalness:.8,roughness:.3});
-    pepper=new THREE.Mesh(g,m);
-    scene.add(pepper);
-}
+function init3D() {
+    const container = document.getElementById('pepper-canvas-container');
 
-function initDeathStar(){
-    const overlay=document.getElementById('death-star-overlay');
-    dsScene=new THREE.Scene();
-    dsCamera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.1,1000);
-    dsCamera.position.z=30;
-    dsRenderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
-    dsRenderer.setSize(innerWidth,innerHeight);
-    overlay.appendChild(dsRenderer.domElement);
-    dsScene.add(new THREE.AmbientLight(0xffffff,1.2));
-    const d1=new THREE.DirectionalLight(0xffffff,1.4);
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(35, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+    camera.position.set(0, 0, 8);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(5,5,5);
+    scene.add(light);
+
+    const loader = new THREE.GLTFLoader();
+
+    loader.load('assets/dr_pepper_can.glb', gltf => {
+        pepperCan = gltf.scene;
+        pepperCan.scale.set(1.8,1.8,1.8);
+        scene.add(pepperCan);
+    });
+
+    const dsContainer = document.getElementById('death-star-overlay');
+
+    dsScene = new THREE.Scene();
+    dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+    dsCamera.position.set(0,0,20);
+
+    dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    dsRenderer.setSize(window.innerWidth, window.innerHeight);
+    dsRenderer.setPixelRatio(window.devicePixelRatio);
+    dsContainer.appendChild(dsRenderer.domElement);
+
+    dsScene.add(new THREE.AmbientLight(0xffffff, 1.4));
+    const d1 = new THREE.DirectionalLight(0xffffff, 1.2);
     d1.position.set(5,5,5);
     dsScene.add(d1);
 
-    const loader=new THREE.GLTFLoader();
-    loader.load('assets/death_star.glb',g=>{
-        deathStar=g.scene;
-        const b=new THREE.Box3().setFromObject(deathStar);
-        const c=b.getCenter(new THREE.Vector3());
-        deathStar.position.sub(c);
+    loader.load('assets/death_star.glb', gltf => {
+        deathStar = gltf.scene;
         deathStar.scale.set(4,4,4);
-        dsScene.add(deathStar);
-    },undefined,()=>{
-        deathStar=new THREE.Mesh(
-            new THREE.SphereGeometry(4,64,64),
-            new THREE.MeshStandardMaterial({color:0x555555,metalness:.6,roughness:.4})
-        );
         dsScene.add(deathStar);
     });
 }
 
-function animate(){
+function animate() {
     requestAnimationFrame(animate);
-    pepper.rotation.y+=.005;
-    renderer.render(scene,camera);
-    if(deathStar && overlay.classList.contains('visible')){
-        deathStar.rotation.y+=.004;
-        dsRenderer.render(dsScene,dsCamera);
-    }
+    if (pepperCan) pepperCan.rotation.y += 0.005;
+    if (deathStar) deathStar.rotation.y += 0.003;
+    renderer.render(scene, camera);
+    dsRenderer.render(dsScene, dsCamera);
 }
 
-const trigger=document.getElementById('star-trigger');
-const overlay=document.getElementById('death-star-overlay');
-let touched=false;
+const trigger = document.getElementById('star-trigger');
+const dsOverlay = document.getElementById('death-star-overlay');
 
-trigger.addEventListener('touchstart',e=>{
-    touched=true;
+trigger.addEventListener('mouseenter', () => dsOverlay.classList.add('visible'));
+trigger.addEventListener('mouseleave', () => dsOverlay.classList.remove('visible'));
+trigger.addEventListener('touchstart', e => {
     e.preventDefault();
-    overlay.classList.toggle('visible');
+    dsOverlay.classList.toggle('visible');
 },{passive:false});
 
-trigger.addEventListener('mouseenter',()=>{ if(!touched) overlay.classList.add('visible'); });
-trigger.addEventListener('mouseleave',()=>{ if(!touched) overlay.classList.remove('visible'); });
+const snakeTrigger = document.getElementById('snake-trigger');
+const snakeImg = document.getElementById('snake-img');
+const container = document.querySelector('.container');
 
-const snake=document.getElementById('snake-trigger');
-const flag=document.getElementById('snake-img');
-const container=document.querySelector('.container');
-
-snake.onclick=()=>{
-    flag.classList.add('visible');
-    container.classList.add('flag-active');
+snakeTrigger.onclick = () => {
+    snakeImg.classList.add('visible');
+    if (window.innerWidth <= 768) container.classList.add('flag-active');
     setTimeout(()=>{
-        flag.classList.remove('visible');
+        snakeImg.classList.remove('visible');
         container.classList.remove('flag-active');
     },2000);
 };
 
-let idle=0;
-const banan=document.getElementById('john-banan');
-document.addEventListener('mousemove',()=>idle=0);
+let idleTime = 0;
+const banan = document.getElementById('john-banan');
+
+document.addEventListener('mousemove',()=>idleTime=0);
 setInterval(()=>{
-    idle++;
-    if(idle>15) banan.classList.add('active');
+    idleTime++;
+    if(idleTime>15) banan.classList.add('active');
 },1000);
 
-banan.onclick=()=>{
+banan.onclick = () => {
     banan.classList.remove('active');
-    idle=0;
+    idleTime = 0;
 };
 
-initPepper();
-initDeathStar();
+init3D();
 animate();
