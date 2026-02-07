@@ -29,7 +29,7 @@ body {
 }
 
 .container {
-    max-width: 460px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 60px 20px;
     display: flex;
@@ -39,13 +39,12 @@ body {
 
 .hero { 
     text-align: center; 
-    margin-bottom: 20px; 
-    position: relative;
-    z-index: 10;
+    margin-bottom: 25px;
+    white-space: nowrap;
 }
 
 .chrome-title {
-    font-size: clamp(2.2rem, 9vw, 3rem);
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
     font-weight: 700;
     background: linear-gradient(to bottom, #fff 0%, #fff 45%, #888 50%, #333 55%, #fff 100%);
     background-size: 100% 200%;
@@ -53,15 +52,25 @@ body {
     -webkit-text-fill-color: transparent;
     animation: chrome-shine 6s ease-in-out infinite;
     display: inline-block;
+    vertical-align: middle;
 }
 
 @keyframes chrome-shine { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 0% 100%; } }
+
+#star-trigger {
+    -webkit-text-fill-color: transparent;
+    cursor: pointer;
+    position: relative;
+    z-index: 2000;
+}
 
 .cursor {
     color: #fff;
     -webkit-text-fill-color: #fff;
     animation: blink 0.8s step-end infinite;
     font-weight: 200;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 @keyframes blink { 50% { opacity: 0; } }
@@ -69,9 +78,16 @@ body {
 .subtitle {
     font-size: 0.65rem;
     color: rgba(255, 255, 255, 0.2);
-    margin-top: -2px;
+    margin-top: 5px;
     letter-spacing: 2px;
     text-transform: uppercase;
+    transition: all 0.4s ease;
+    display: inline-block;
+}
+
+.subtitle:hover {
+    color: var(--accent-purple);
+    text-shadow: 0 0 10px var(--accent-purple);
 }
 
 .card {
@@ -94,15 +110,16 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.5);
-    width: 80px;
+    width: 60px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(10deg);
 }
 
 #snake-img.visible {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.2);
+    transform: translate(-50%, -50%) scale(1.5);
 }
 
 .system-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -135,9 +152,8 @@ body {
     top: -100px; left: 50%; transform: translateX(-50%);
     background: #111; color: #fff; border: 1px solid #bc6ff1;
     padding: 14px 30px; border-radius: 20px;
-    z-index: 2000; transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: 3000; transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     cursor: pointer;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
 }
 #john-banan.active { top: 30px; }
 
@@ -145,9 +161,9 @@ body {
     position: fixed;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 450px; height: 450px;
+    width: 100vw; height: 100vh;
     pointer-events: none;
-    z-index: 1000;
+    z-index: 1500;
     opacity: 0;
     transition: opacity 0.5s ease;
 }
