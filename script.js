@@ -1,201 +1,214 @@
-// script.js (module)
-import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
-import { GLTFLoader } from 'https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
-import { RGBELoader } from 'https://unpkg.com/three@0.152.2/examples/jsm/loaders/RGBELoader.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// ---------- Death Star (hover + long tap) ----------
-const starEl = document.querySelector('.star');
-const death = document.getElementById('death-star');
-let dsAnim = null;
+/* =========================================
+   SCENE 1: DR PEPPER (MAIN CARD)
+   ========================================= */
+function initDrPepper() {
+    const container = document.getElementById('canvas-container');
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
-function showDeathStar(x, y) {
-  death.style.left = (x - death.clientWidth / 2) + 'px';
-  death.style.top = (y - death.clientHeight / 2) + 'px';
-  death.classList.add('spin');
-}
-function hideDeathStar() {
-  death.classList.remove('spin');
-}
+    const scene = new THREE.Scene();
+    
+    // Camera
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.z = 3.5;
+    camera.position.y = 0.5;
 
-// desktop hover
-starEl.addEventListener('mousemove', e => showDeathStar(e.clientX, e.clientY));
-starEl.addEventListener('mouseleave', hideDeathStar);
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
 
-// mobile long tap
-let touchTimer = null;
-starEl.addEventListener('touchstart', e => {
-  touchTimer = setTimeout(() => {
-    const t = e.touches[0];
-    showDeathStar(t.clientX, t.clientY);
-  }, 500);
-});
-starEl.addEventListener('touchend', () => {
-  clearTimeout(touchTimer);
-  hideDeathStar();
-});
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambientLight);
 
-// ---------- Idle message (1x per session) ----------
-const idleEl = document.getElementById('idle');
-let idleShown = sessionStorage.getItem('idleShown') === '1';
-let idleTimer;
-function scheduleIdle() {
-  clearTimeout(idleTimer);
-  if (idleShown) return;
-  idleTimer = setTimeout(() => {
-    idleEl.style.top = '20px';
-    idleEl.style.opacity = '0.68';
-    idleShown = true;
-    sessionStorage.setItem('idleShown', '1');
-    setTimeout(() => { idleEl.style.opacity = '0'; }, 4800);
-  }, 18000);
-}
-['mousemove','scroll','click','touchstart','keydown'].forEach(ev => document.addEventListener(ev, scheduleIdle));
-scheduleIdle();
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.position.set(2, 2, 5);
+    scene.add(dirLight);
 
-// clicking links hides messages
-document.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hideDeathStar(); idleEl.style.opacity = '0'; }));
+    // Purple Rim Light
+    const rimLight = new THREE.SpotLight(0x8a2be2, 5);
+    rimLight.position.set(-2, 1, -2);
+    rimLight.lookAt(0, 0, 0);
+    scene.add(rimLight);
 
-// ---------- Parallax for chrome backdrop ----------
-const chromeBackdrop = document.querySelector('.chrome-backdrop');
-document.addEventListener('mousemove', (e) => {
-  const x = (e.clientX / window.innerWidth - 0.5) * 10;
-  const y = (e.clientY / window.innerHeight - 0.5) * 6;
-  chromeBackdrop.style.transform = `translate(${x}px, ${y}px) scale(1.01)`;
-});
+    // Model Loader
+    const loader = new GLTFLoader();
+    let model;
 
-// ---------- Three.js scene (Dr Pepper .glb) ----------
-const container = document.getElementById('pepper-canvas');
-let renderer, scene, camera, model, pmremGenerator, envMap;
-
-function initThree() {
-  const width = container.clientWidth;
-  const height = container.clientHeight;
-
-  renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-  renderer.setSize(width, height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  container.appendChild(renderer.domElement);
-
-  scene = new THREE.Scene();
-
-  camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
-  camera.position.set(0, 0.8, 2.4);
-
-  pmremGenerator = new THREE.PMREMGenerator(renderer);
-  pmremGenerator.compileEquirectangularShader();
-
-  // ambient + key light + rim
-  scene.add(new THREE.AmbientLight(0xffffff, 0.45));
-  const key = new THREE.DirectionalLight(0xffffff, 0.8);
-  key.position.set(2, 4, 2);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0x9b7bff, 0.65);
-  rim.position.set(-2.5, -1.2, -1.8);
-  scene.add(rim);
-
-  // load chrome image as environment (use assets/chrome.jpg)
-  const texLoader = new THREE.TextureLoader();
-  texLoader.load('assets/chrome.jpg', (tex) => {
-    tex.mapping = THREE.EquirectangularReflectionMapping;
-    envMap = pmremGenerator.fromEquirectangular(tex).texture;
-    scene.environment = envMap;
-    scene.background = null;
-  }, undefined, () => {
-    // ignore failure - it's optional
-  });
-
-  // ground reflection (subtle)
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(10,10),
-    new THREE.MeshStandardMaterial({ color:0x000000, metalness:0.1, roughness:0.9, transparent:true, opacity:0.0 })
-  );
-  ground.rotation.x = -Math.PI/2;
-  ground.position.y = -0.9;
-  scene.add(ground);
-
-  // load model
-  const loader = new GLTFLoader();
-  loader.load('assets/dr_pepper.glb', gltf => {
-    model = gltf.scene;
-    // Normalize model size
-    const box = new THREE.Box3().setFromObject(model);
-    const size = new THREE.Vector3();
-    box.getSize(size);
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 1.0 / maxDim * 1.1;
-    model.scale.setScalar(scale);
-
-    // center
-    box.setFromObject(model);
-    box.getCenter(size);
-    model.position.x -= size.x;
-    model.position.y -= (box.min.y - (-0.5));
-
-    // adjust materials for extra chrome/rim if standard
-    model.traverse((o) => {
-      if (o.isMesh) {
-        o.castShadow = true;
-        if (o.material && 'metalness' in o.material) {
-          o.material.metalness = Math.max(0.8, o.material.metalness || 0.8);
-          o.material.roughness = Math.min(0.25, o.material.roughness || 0.25);
-          o.material.envMapIntensity = 1.0;
-          o.material.needsUpdate = true;
-        }
-      }
+    loader.load('assets/dr_pepper.glb', (gltf) => {
+        model = gltf.scene;
+        
+        // Center the model
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
+        
+        scene.add(model);
+    }, undefined, (error) => {
+        console.error('Dr Pepper model not found. Using placeholder.');
+        // Fallback geometry if file missing
+        const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 32);
+        const material = new THREE.MeshStandardMaterial({ 
+            color: 0x770000, 
+            roughness: 0.2, 
+            metalness: 0.8 
+        });
+        model = new THREE.Mesh(geometry, material);
+        scene.add(model);
     });
 
-    scene.add(model);
+    // Controls (disable zoom for cleanliness)
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false;
+    controls.enablePan = false;
+
+    // Animation Loop
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        if (model) {
+            model.rotation.y += 0.005; // Slow rotation
+        }
+        
+        renderer.render(scene, camera);
+    }
     animate();
-  }, undefined, err => {
-    // fallback: show 2D image if model fails
-    console.warn('GLB load failed, fallback to image', err);
-    const img = document.createElement('img');
-    img.src = 'assets/dr_pepper_fallback.png';
-    img.style.width = '120px';
-    img.style.filter = 'drop-shadow(0 20px 40px rgba(0,0,0,0.6))';
-    container.innerHTML = '';
-    container.appendChild(img);
-  });
 
-  window.addEventListener('resize', onResize);
+    // Resize Handler
+    window.addEventListener('resize', () => {
+        if (!container) return;
+        const newWidth = container.clientWidth;
+        const newHeight = container.clientHeight;
+        renderer.setSize(newWidth, newHeight);
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+    });
 }
 
-function onResize() {
-  if (!renderer) return;
-  const w = container.clientWidth;
-  const h = container.clientHeight;
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-  renderer.setSize(w, h);
+/* =========================================
+   SCENE 2: DEATH STAR (EASTER EGG)
+   ========================================= */
+function initDeathStar() {
+    const container = document.getElementById('death-star-container');
+    const width = 300;
+    const height = 300;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
+    camera.position.z = 4;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(width, height);
+    container.appendChild(renderer.domElement);
+
+    // Create Procedural Death Star (Wireframe + Sphere)
+    const geometry = new THREE.IcosahedronGeometry(1.2, 1);
+    
+    // Wireframe Material (Tech look)
+    const wireframeMat = new THREE.MeshBasicMaterial({ 
+        color: 0xaaaaaa, 
+        wireframe: true 
+    });
+    
+    // Inner Core (Dark Chrome)
+    const coreMat = new THREE.MeshStandardMaterial({
+        color: 0x222222,
+        metalness: 0.9,
+        roughness: 0.2
+    });
+
+    const wireframeMesh = new THREE.Mesh(geometry, wireframeMat);
+    const coreMesh = new THREE.Mesh(geometry, coreMat);
+    
+    const deathStarGroup = new THREE.Group();
+    deathStarGroup.add(wireframeMesh);
+    deathStarGroup.add(coreMesh);
+    
+    // The "Eye" of the Death Star (Simple indentation visual)
+    const eyeGeo = new THREE.SphereGeometry(0.4, 32, 32);
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0x444444 });
+    const eye = new THREE.Mesh(eyeGeo, eyeMat);
+    eye.position.set(0.8, 0.5, 0.8);
+    deathStarGroup.add(eye);
+
+    scene.add(deathStarGroup);
+
+    const light = new THREE.PointLight(0xffffff, 2, 100);
+    light.position.set(2, 2, 2);
+    scene.add(light);
+
+    function animate() {
+        requestAnimationFrame(animate);
+        // Rotation around its own axis
+        deathStarGroup.rotation.y -= 0.02;
+        deathStarGroup.rotation.x += 0.005;
+        renderer.render(scene, camera);
+    }
+    animate();
 }
 
-let last = 0;
-function animate(t) {
-  requestAnimationFrame(animate);
-  const now = t || performance.now();
-  const dt = (now - last) / 1000;
-  last = now;
-  if (model) {
-    // slow spin around Y (around itself)
-    model.rotation.y += 0.35 * dt; // radians per second
-  }
-  if (renderer) renderer.render(scene, camera);
+/* =========================================
+   LOGIC & INTERACTIONS
+   ========================================= */
+
+// 1. Initialize 3D
+initDrPepper();
+initDeathStar();
+
+// 2. Easter Egg: Hover "star"
+const starTrigger = document.getElementById('star-trigger');
+const dsContainer = document.getElementById('death-star-container');
+
+// Desktop Hover
+starTrigger.addEventListener('mouseenter', () => {
+    dsContainer.style.opacity = '1';
+});
+starTrigger.addEventListener('mouseleave', () => {
+    dsContainer.style.opacity = '0';
+});
+
+// Mobile Long Touch
+let touchTimer;
+starTrigger.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent text selection
+    touchTimer = setTimeout(() => {
+        dsContainer.style.opacity = '1';
+    }, 500); // 500ms for long press
+});
+
+starTrigger.addEventListener('touchend', () => {
+    clearTimeout(touchTimer);
+    dsContainer.style.opacity = '0';
+});
+
+// 3. Idle Timer (Jonh Banan 773)
+let idleTime = 0;
+const idleOverlay = document.getElementById('idle-overlay');
+let overlayShown = false;
+
+function resetTimer() {
+    idleTime = 0;
 }
 
-// init three when container is present
-if (container) {
-  initThree();
-}
+// Increment timer
+setInterval(() => {
+    idleTime++;
+    // 17 seconds threshold
+    if (idleTime > 17 && !overlayShown) {
+        idleOverlay.classList.remove('hidden');
+        overlayShown = true; // Show only once per session
+    }
+}, 1000);
 
-// accelerate spin on hover
-container.addEventListener('mouseenter', () => {
-  if (!model) return;
-  const accel = () => { if (model) model.rotation.y += 0.18; requestAnimationFrame(accel); };
-}, {passive:true});
-
-// ensure WebGL supported
-if (!window.WebGLRenderingContext) {
-  container.innerHTML = '<div class="small muted">WebGL not supported — fallback image will be used.</div>';
-}
+// Reset interactions
+window.addEventListener('mousemove', resetTimer);
+window.addEventListener('keypress', resetTimer);
+window.addEventListener('scroll', resetTimer);
+window.addEventListener('click', resetTimer);
+window.addEventListener('touchstart', resetTimer);
