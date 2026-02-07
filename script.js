@@ -36,29 +36,37 @@ function init3D() {
     const dsContainer = document.getElementById('death-star-overlay');
     dsScene = new THREE.Scene();
     dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-    dsCamera.position.set(0, 0, 12);
+    dsCamera.position.set(0, 0, 15);
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     dsRenderer.setSize(window.innerWidth, window.innerHeight);
     dsRenderer.setClearColor(0x000000, 0);
     dsContainer.appendChild(dsRenderer.domElement);
 
-    dsScene.add(new THREE.AmbientLight(0xffffff, 0.6));
-    const dsl = new THREE.DirectionalLight(0xffffff, 1);
+    dsScene.add(new THREE.AmbientLight(0xffffff, 1.2));
+    const dsl = new THREE.DirectionalLight(0xffffff, 1.5);
     dsl.position.set(5, 5, 5);
     dsScene.add(dsl);
+    
+    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 0.8);
+    dsl2.position.set(-5, -3, 5);
+    dsScene.add(dsl2);
 
     loader.load('assets/death_star.glb', (gltf) => {
         deathStar = gltf.scene;
         const box = new THREE.Box3().setFromObject(deathStar);
         const center = box.getCenter(new THREE.Vector3());
         deathStar.position.sub(center);
-        deathStar.scale.set(2.5, 2.5, 2.5);
+        deathStar.scale.set(3.5, 3.5, 3.5);
         dsScene.add(deathStar);
-    }, undefined, () => {
+        console.log('Death Star model loaded successfully');
+    }, (progress) => {
+        console.log('Loading death star:', (progress.loaded / progress.total * 100) + '%');
+    }, (error) => {
+        console.log('Death Star model not found, using fallback sphere');
         deathStar = new THREE.Mesh(
-            new THREE.SphereGeometry(3, 32, 32),
-            new THREE.MeshStandardMaterial({ color: 0x555555, metalness: 0.7, roughness: 0.3 })
+            new THREE.SphereGeometry(3.5, 32, 32),
+            new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.7, roughness: 0.3 })
         );
         dsScene.add(deathStar);
     });
@@ -91,6 +99,7 @@ if (trigger && dsOverlay) {
     console.log('Star trigger found:', trigger);
     console.log('Death star overlay found:', dsOverlay);
     
+    // Desktop hover
     trigger.addEventListener('mouseenter', (e) => {
         console.log('Star hover detected');
         dsOverlay.classList.add('visible');
@@ -101,10 +110,16 @@ if (trigger && dsOverlay) {
         dsOverlay.classList.remove('visible');
     });
 
+    // Mobile and desktop tap
+    trigger.addEventListener('touchstart', (e) => {
+        console.log('Star touched (mobile)');
+        e.preventDefault();
+        dsOverlay.classList.toggle('visible');
+    });
+    
     trigger.addEventListener('click', (e) => {
         console.log('Star clicked');
         e.preventDefault();
-        e.stopPropagation();
         dsOverlay.classList.toggle('visible');
     });
 } else {
