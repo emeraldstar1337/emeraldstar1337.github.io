@@ -88,6 +88,9 @@ const trigger = document.getElementById('star-trigger');
 const dsOverlay = document.getElementById('death-star-overlay');
 
 if (trigger && dsOverlay) {
+    console.log('Star trigger found:', trigger);
+    console.log('Death star overlay found:', dsOverlay);
+    
     trigger.addEventListener('mouseenter', (e) => {
         console.log('Star hover detected');
         dsOverlay.classList.add('visible');
@@ -104,13 +107,28 @@ if (trigger && dsOverlay) {
         e.stopPropagation();
         dsOverlay.classList.toggle('visible');
     });
+} else {
+    console.error('Elements not found:', {trigger, dsOverlay});
 }
 
 const snakeTrigger = document.getElementById('snake-trigger');
 const snakeImg = document.getElementById('snake-img');
+const container = document.querySelector('.container');
+
 snakeTrigger.onclick = () => {
     snakeImg.classList.add('visible');
-    setTimeout(() => { snakeImg.classList.remove('visible'); }, 2000);
+    
+    // On mobile, add class to container to push content up
+    if (window.innerWidth <= 768) {
+        container.classList.add('flag-active');
+    }
+    
+    setTimeout(() => { 
+        snakeImg.classList.remove('visible');
+        if (window.innerWidth <= 768) {
+            container.classList.remove('flag-active');
+        }
+    }, 2000);
 };
 
 let idleTime = 0;
