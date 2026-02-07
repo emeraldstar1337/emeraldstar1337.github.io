@@ -26,7 +26,7 @@ body {
 .glow-overlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 50% 10%, rgba(188, 111, 241, 0.08) 0%, transparent 60%);
+    background: radial-gradient(circle at 50% 10%, rgba(188,111,241,0.08) 0%, transparent 60%);
     z-index: -1;
 }
 
@@ -38,19 +38,11 @@ body {
     flex-direction: column;
     gap: 15px;
     position: relative;
-    z-index: auto;
-}
-
-.container.flag-active {
-    padding-bottom: 200px;
 }
 
 .hero {
     text-align: center;
     margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     position: relative;
     z-index: 10;
 }
@@ -58,7 +50,6 @@ body {
 .chrome-title {
     font-size: clamp(2rem, 8vw, 3rem);
     font-weight: 700;
-    line-height: 1.2;
 }
 
 .chrome-title::before {
@@ -77,19 +68,12 @@ body {
 
 #star-trigger {
     cursor: pointer;
-    position: relative;
-    z-index: 20;
     background: linear-gradient(to bottom, #fff 0%, #fff 45%, #888 50%, #333 55%, #fff 100%);
-    background-size: 100% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: chrome-shine 6s ease-in-out infinite;
 }
 
-.cursor {
-    animation: blink 0.8s step-end infinite;
-}
-
+.cursor { animation: blink 0.8s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
 .card {
@@ -102,7 +86,16 @@ body {
     z-index: 2;
 }
 
-.about-card { cursor: pointer; }
+.link-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.link-inner img {
+    width: 18px;
+    height: 18px;
+}
 
 #snake-img {
     position: absolute;
@@ -111,7 +104,7 @@ body {
     transform: translateY(-50%) scale(0);
     opacity: 0;
     transition: all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
-    z-index: 3000;
+    z-index: 4000;
 }
 
 #snake-img.visible {
@@ -125,7 +118,7 @@ body {
         left: 50%;
         bottom: -250px;
         transform: translateX(-50%) scale(0.8);
-        z-index: 4000;
+        z-index: 5000;
     }
 
     #snake-img.visible {
@@ -157,12 +150,3 @@ body {
     height: 100% !important;
     display: block;
 }
-
-#john-banan {
-    position: fixed;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 5000;
-}
-#john-banan.active { top: 30px; }
