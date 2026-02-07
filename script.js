@@ -47,14 +47,18 @@ function init3D() {
         dsContainer.appendChild(dsRenderer.domElement);
     }
 
-    dsScene.add(new THREE.AmbientLight(0xffffff, 2));
-    const dsl = new THREE.DirectionalLight(0xffffff, 3);
+    dsScene.add(new THREE.AmbientLight(0xffffff, 3));
+    const dsl = new THREE.DirectionalLight(0xffffff, 5);
     dsl.position.set(10, 10, 10);
     dsScene.add(dsl);
     
-    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 1.5);
+    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 3);
     dsl2.position.set(-10, -5, 10);
     dsScene.add(dsl2);
+    
+    const dsl3 = new THREE.DirectionalLight(0xffffff, 3);
+    dsl3.position.set(0, -10, -10);
+    dsScene.add(dsl3);
 
     function createProceduralDeathStar() {
         const deathStarGroup = new THREE.Group();
@@ -132,7 +136,7 @@ function init3D() {
             const size = new THREE.Vector3();
             box.getSize(size);
             deathStar.position.sub(center);
-            deathStar.scale.set(0.4, 0.4, 0.4);
+            deathStar.scale.set(10, 10, 10);
             dsScene.add(deathStar);
             console.log('GLB Death Star добавлена в сцену, размер:', size);
         },
