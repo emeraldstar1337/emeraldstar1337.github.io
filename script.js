@@ -35,11 +35,11 @@ function init3D() {
 
     const dsContainer = document.getElementById('death-star-overlay');
     dsScene = new THREE.Scene();
-    dsCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
+    dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
     dsCamera.position.set(0, 0, 14);
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    dsRenderer.setSize(450, 450);
+    dsRenderer.setSize(window.innerWidth, window.innerHeight);
     dsContainer.appendChild(dsRenderer.domElement);
 
     dsScene.add(new THREE.AmbientLight(0xffffff, 0.6));
@@ -65,7 +65,7 @@ function init3D() {
 
 function animate() {
     requestAnimationFrame(animate);
-    if (pepperCan) pepperCan.rotation.y += 0.012;
+    if (pepperCan) pepperCan.rotation.y += 0.008;
     if (deathStar) deathStar.rotation.y += 0.005;
     renderer.render(scene, camera);
     dsRenderer.render(dsScene, dsCamera);
@@ -73,8 +73,8 @@ function animate() {
 
 const trigger = document.getElementById('star-trigger');
 const dsOverlay = document.getElementById('death-star-overlay');
-trigger.onmouseenter = () => dsOverlay.classList.add('visible');
-trigger.onmouseleave = () => dsOverlay.classList.remove('visible');
+trigger.addEventListener('mouseenter', () => dsOverlay.classList.add('visible'));
+trigger.addEventListener('mouseleave', () => dsOverlay.classList.remove('visible'));
 
 const snakeTrigger = document.getElementById('snake-trigger');
 const snakeImg = document.getElementById('snake-img');
@@ -85,7 +85,7 @@ snakeTrigger.onclick = () => {
 
 let idleTime = 0;
 const banan = document.getElementById('john-banan');
-document.onmousemove = () => { idleTime = 0; };
+document.addEventListener('mousemove', () => { idleTime = 0; });
 setInterval(() => {
     idleTime++;
     if (idleTime > 15) banan.classList.add('active');
@@ -96,12 +96,6 @@ banan.onclick = () => {
     banan.style.transform = 'translateX(-50%) translateY(-100px)';
     setTimeout(() => { banan.classList.remove('active'); banan.style.opacity = '1'; }, 600);
 };
-
-document.addEventListener('mousemove', (e) => {
-    const moveX = (e.clientX - window.innerWidth / 2) * 0.005;
-    const moveY = (e.clientY - window.innerHeight / 2) * 0.005;
-    document.getElementById('bg').style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
-});
 
 init3D();
 animate();
