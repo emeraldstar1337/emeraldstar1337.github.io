@@ -24,7 +24,7 @@ function init3D() {
         const box = new THREE.Box3().setFromObject(pepperCan);
         const center = box.getCenter(new THREE.Vector3());
         pepperCan.position.sub(center);
-        pepperCan.scale.set(1.5, 1.5, 1.5);
+        pepperCan.scale.set(1.2, 1.2, 1.2);
         scene.add(pepperCan);
     }, undefined, () => {
         const geo = new THREE.CylinderGeometry(1, 1, 2.5, 32);
@@ -47,12 +47,12 @@ function init3D() {
         dsContainer.appendChild(dsRenderer.domElement);
     }
 
-    dsScene.add(new THREE.AmbientLight(0xffffff, 1.5));
-    const dsl = new THREE.DirectionalLight(0xffffff, 2);
+    dsScene.add(new THREE.AmbientLight(0xffffff, 2));
+    const dsl = new THREE.DirectionalLight(0xffffff, 3);
     dsl.position.set(10, 10, 10);
     dsScene.add(dsl);
     
-    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 1);
+    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 1.5);
     dsl2.position.set(-10, -5, 10);
     dsScene.add(dsl2);
 
@@ -60,52 +60,52 @@ function init3D() {
         const deathStarGroup = new THREE.Group();
         
         const mainSphere = new THREE.Mesh(
-            new THREE.SphereGeometry(30, 64, 64),
+            new THREE.SphereGeometry(35, 64, 64),
             new THREE.MeshStandardMaterial({ 
-                color: 0x888888, 
-                metalness: 0.5, 
-                roughness: 0.5,
-                emissive: 0x222222
+                color: 0xaaaaaa, 
+                metalness: 0.4, 
+                roughness: 0.6,
+                emissive: 0x333333
             })
         );
         deathStarGroup.add(mainSphere);
         
-        const trenchGeometry = new THREE.TorusGeometry(30.5, 1.2, 16, 100);
+        const trenchGeometry = new THREE.TorusGeometry(35.8, 1.5, 16, 100);
         const trenchMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x444444,
-            metalness: 0.7,
-            roughness: 0.4
+            color: 0x666666,
+            metalness: 0.6,
+            roughness: 0.5
         });
         const trench = new THREE.Mesh(trenchGeometry, trenchMaterial);
         trench.rotation.x = Math.PI / 2;
         deathStarGroup.add(trench);
         
-        const dishGeometry = new THREE.SphereGeometry(8, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+        const dishGeometry = new THREE.SphereGeometry(10, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
         const dishMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x555555,
-            metalness: 0.8,
-            roughness: 0.3,
+            color: 0x777777,
+            metalness: 0.7,
+            roughness: 0.4,
             emissive: 0x00ff00,
-            emissiveIntensity: 0.3
+            emissiveIntensity: 0.4
         });
         const dish = new THREE.Mesh(dishGeometry, dishMaterial);
         dish.rotation.x = Math.PI;
-        dish.position.set(15, 15, 15);
+        dish.position.set(18, 18, 18);
         deathStarGroup.add(dish);
         
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 100; i++) {
             const panel = new THREE.Mesh(
-                new THREE.BoxGeometry(2, 2, 0.3),
+                new THREE.BoxGeometry(2.5, 2.5, 0.4),
                 new THREE.MeshStandardMaterial({ 
-                    color: Math.random() > 0.5 ? 0x666666 : 0x555555,
-                    metalness: 0.6,
-                    roughness: 0.6
+                    color: Math.random() > 0.5 ? 0x888888 : 0x777777,
+                    metalness: 0.5,
+                    roughness: 0.7
                 })
             );
             
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.random() * Math.PI;
-            const radius = 31;
+            const radius = 36;
             
             panel.position.x = radius * Math.sin(phi) * Math.cos(theta);
             panel.position.y = radius * Math.sin(phi) * Math.sin(theta);
@@ -118,8 +118,12 @@ function init3D() {
         return deathStarGroup;
     }
 
+    deathStar = createProceduralDeathStar();
+    dsScene.add(deathStar);
+
     loader.load('assets/death_star.glb', 
         (gltf) => {
+            dsScene.remove(deathStar);
             deathStar = gltf.scene;
             const box = new THREE.Box3().setFromObject(deathStar);
             const center = box.getCenter(new THREE.Vector3());
@@ -129,8 +133,7 @@ function init3D() {
         },
         undefined,
         (error) => {
-            deathStar = createProceduralDeathStar();
-            dsScene.add(deathStar);
+            console.log('Using fallback Death Star');
         }
     );
 
