@@ -87,17 +87,24 @@ function animate() {
 const trigger = document.getElementById('star-trigger');
 const dsOverlay = document.getElementById('death-star-overlay');
 
-trigger.addEventListener('mouseenter', () => {
-    dsOverlay.classList.add('visible');
-});
+if (trigger && dsOverlay) {
+    trigger.addEventListener('mouseenter', (e) => {
+        console.log('Star hover detected');
+        dsOverlay.classList.add('visible');
+    });
 
-trigger.addEventListener('mouseleave', () => {
-    dsOverlay.classList.remove('visible');
-});
+    trigger.addEventListener('mouseleave', (e) => {
+        console.log('Star hover ended');
+        dsOverlay.classList.remove('visible');
+    });
 
-trigger.addEventListener('click', () => {
-    dsOverlay.classList.toggle('visible');
-});
+    trigger.addEventListener('click', (e) => {
+        console.log('Star clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        dsOverlay.classList.toggle('visible');
+    });
+}
 
 const snakeTrigger = document.getElementById('snake-trigger');
 const snakeImg = document.getElementById('snake-img');
