@@ -36,19 +36,15 @@ function init3D() {
     const dsContainer = document.getElementById('death-star-overlay');
     dsScene = new THREE.Scene();
     dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-    dsCamera.position.set(0, 0, 15);
+    dsCamera.position.set(0, 0, 30);
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     dsRenderer.setSize(window.innerWidth, window.innerHeight);
     dsRenderer.setPixelRatio(window.devicePixelRatio);
     dsRenderer.setClearColor(0x000000, 0);
     
-    // Ensure canvas is appended
     if (dsContainer) {
         dsContainer.appendChild(dsRenderer.domElement);
-        console.log('Death Star canvas appended to overlay');
-    } else {
-        console.error('Death Star overlay container not found!');
     }
 
     dsScene.add(new THREE.AmbientLight(0xffffff, 1.2));
@@ -60,7 +56,6 @@ function init3D() {
     dsl2.position.set(-5, -3, 5);
     dsScene.add(dsl2);
 
-    // Function to create procedural Death Star
     function createProceduralDeathStar() {
         const deathStarGroup = new THREE.Group();
         
@@ -123,7 +118,6 @@ function init3D() {
         return deathStarGroup;
     }
 
-    // Try to load custom GLB model first
     loader.load('assets/death_star.glb', 
         (gltf) => {
             deathStar = gltf.scene;
@@ -132,16 +126,11 @@ function init3D() {
             deathStar.position.sub(center);
             deathStar.scale.set(4, 4, 4);
             dsScene.add(deathStar);
-            console.log('✓ Custom Death Star GLB loaded successfully');
         },
-        (progress) => {
-            console.log('Loading Death Star GLB:', Math.round(progress.loaded / progress.total * 100) + '%');
-        },
+        undefined,
         (error) => {
-            console.log('⚠️ Custom GLB not found, using procedural Death Star');
             deathStar = createProceduralDeathStar();
             dsScene.add(deathStar);
-            console.log('✓ Procedural Death Star created');
         }
     );
 
@@ -163,7 +152,6 @@ function animate() {
     if (pepperCan) pepperCan.rotation.y += 0.005;
     if (deathStar) deathStar.rotation.y += 0.005;
     
-    // Always render both scenes
     renderer.render(scene, camera);
     if (dsRenderer && dsScene && dsCamera) {
         dsRenderer.render(dsScene, dsCamera);
@@ -174,37 +162,27 @@ const trigger = document.getElementById('star-trigger');
 const dsOverlay = document.getElementById('death-star-overlay');
 
 if (trigger && dsOverlay) {
-    console.log('✓ Star trigger found:', trigger);
-    console.log('✓ Death star overlay found:', dsOverlay);
-    
-    // Desktop hover
-    trigger.addEventListener('mouseenter', (e) => {
-        console.log('🖱️ Star hover detected - showing overlay');
-        dsOverlay.classList.add('visible');
-        console.log('Overlay classes:', dsOverlay.className);
-    });
+    let isTouch = false;
 
-    trigger.addEventListener('mouseleave', (e) => {
-        console.log('🖱️ Star hover ended - hiding overlay');
-        dsOverlay.classList.remove('visible');
-    });
-
-    // Mobile and desktop tap
     trigger.addEventListener('touchstart', (e) => {
-        console.log('📱 Star touched (mobile) - toggling overlay');
+        isTouch = true;
         e.preventDefault();
         dsOverlay.classList.toggle('visible');
-        console.log('Overlay visible:', dsOverlay.classList.contains('visible'));
+    }, { passive: false });
+
+    trigger.addEventListener('mouseenter', () => {
+        if (!isTouch) dsOverlay.classList.add('visible');
+    });
+
+    trigger.addEventListener('mouseleave', () => {
+        if (!isTouch) dsOverlay.classList.remove('visible');
     });
     
     trigger.addEventListener('click', (e) => {
-        console.log('🖱️ Star clicked - toggling overlay');
+        if (isTouch) return;
         e.preventDefault();
         dsOverlay.classList.toggle('visible');
-        console.log('Overlay visible:', dsOverlay.classList.contains('visible'));
     });
-} else {
-    console.error('❌ Elements not found:', {trigger, dsOverlay});
 }
 
 const snakeTrigger = document.getElementById('snake-trigger');
@@ -214,7 +192,6 @@ const container = document.querySelector('.container');
 snakeTrigger.onclick = () => {
     snakeImg.classList.add('visible');
     
-    // On mobile, add class to container to push content up
     if (window.innerWidth <= 768) {
         container.classList.add('flag-active');
     }
