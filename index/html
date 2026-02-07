@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the emerald star | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fonts: Inter for UI, Space Grotesk for Tech vibe -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+
+    <div class="parallax-bg" id="bg"></div>
+    <div class="overlay"></div>
+
+    <main class="container">
+        <!-- HERO BLOCK -->
+        <header class="hero">
+            <h1 class="chrome-title">
+                the emerald <span id="star-trigger">star</span><span class="cursor">▍</span>
+            </h1>
+            <p class="subtitle">May the Force be with you.</p>
+        </header>
+
+        <!-- ABOUT BLOCK -->
+        <section class="card about-card">
+            <p>Don't tread on me</p>
+        </section>
+
+        <!-- SYSTEM CARD -->
+        <section class="card system-card">
+            <div class="card-content">
+                <div class="system-item">
+                    <span class="label">OS:</span>
+                    <div class="chips">
+                        <span class="chip"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Fedora_logo.svg" alt="Fedora"> Fedora</span>
+                        <span class="chip"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Logo_Windows_11.svg" alt="Win11"> Windows 11</span>
+                    </div>
+                </div>
+                <div class="system-item">
+                    <span class="label">Phone:</span>
+                    <span class="val">Google Pixel 8 Pro</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3D DR PEPPER CARD -->
+        <section class="card pepper-card">
+            <div id="pepper-canvas-container">
+                <!-- Canvas will be injected here -->
+            </div>
+            <div class="card-label">3D Visualizer: Dr Pepper</div>
+        </section>
+
+        <!-- LINKS BLOCK -->
+        <section class="links-grid">
+            <a href="https://t.me/emeraldfall" target="_blank" class="card link-card">
+                <div class="link-inner">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG">
+                    <span>Telegram</span>
+                </div>
+            </a>
+            <a href="https://open.spotify.com/playlist/6LHHmGnB7rndcD5PDrdv7T?si=56d65c3460734f97" target="_blank" class="card link-card">
+                <div class="link-inner">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify">
+                    <span>Spotify Playlist</span>
+                </div>
+            </a>
+            <a href="https://steamcommunity.com/id/lordpavv" target="_blank" class="card link-card">
+                <div class="link-inner">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg" alt="Steam">
+                    <span>Steam</span>
+                </div>
+            </a>
+        </section>
+
+        <!-- IMPORTANT BLOCK -->
+        <section class="card important-card">
+            <div class="restricted-box">
+                <span class="glitch-text">Important information [ access restricted ]</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- EASTER EGG CONTAINER -->
+    <div id="easter-egg-container"></div>
+    
+    <!-- DEATH STAR OVERLAY (3D) -->
+    <div id="death-star-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
