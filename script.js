@@ -40,8 +40,16 @@ function init3D() {
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     dsRenderer.setSize(window.innerWidth, window.innerHeight);
+    dsRenderer.setPixelRatio(window.devicePixelRatio);
     dsRenderer.setClearColor(0x000000, 0);
-    dsContainer.appendChild(dsRenderer.domElement);
+    
+    // Ensure canvas is appended
+    if (dsContainer) {
+        dsContainer.appendChild(dsRenderer.domElement);
+        console.log('Death Star canvas appended to overlay');
+    } else {
+        console.error('Death Star overlay container not found!');
+    }
 
     dsScene.add(new THREE.AmbientLight(0xffffff, 1.2));
     const dsl = new THREE.DirectionalLight(0xffffff, 1.5);
@@ -88,42 +96,49 @@ function animate() {
     requestAnimationFrame(animate);
     if (pepperCan) pepperCan.rotation.y += 0.005;
     if (deathStar) deathStar.rotation.y += 0.005;
+    
+    // Always render both scenes
     renderer.render(scene, camera);
-    dsRenderer.render(dsScene, dsCamera);
+    if (dsRenderer && dsScene && dsCamera) {
+        dsRenderer.render(dsScene, dsCamera);
+    }
 }
 
 const trigger = document.getElementById('star-trigger');
 const dsOverlay = document.getElementById('death-star-overlay');
 
 if (trigger && dsOverlay) {
-    console.log('Star trigger found:', trigger);
-    console.log('Death star overlay found:', dsOverlay);
+    console.log('✓ Star trigger found:', trigger);
+    console.log('✓ Death star overlay found:', dsOverlay);
     
     // Desktop hover
     trigger.addEventListener('mouseenter', (e) => {
-        console.log('Star hover detected');
+        console.log('🖱️ Star hover detected - showing overlay');
         dsOverlay.classList.add('visible');
+        console.log('Overlay classes:', dsOverlay.className);
     });
 
     trigger.addEventListener('mouseleave', (e) => {
-        console.log('Star hover ended');
+        console.log('🖱️ Star hover ended - hiding overlay');
         dsOverlay.classList.remove('visible');
     });
 
     // Mobile and desktop tap
     trigger.addEventListener('touchstart', (e) => {
-        console.log('Star touched (mobile)');
+        console.log('📱 Star touched (mobile) - toggling overlay');
         e.preventDefault();
         dsOverlay.classList.toggle('visible');
+        console.log('Overlay visible:', dsOverlay.classList.contains('visible'));
     });
     
     trigger.addEventListener('click', (e) => {
-        console.log('Star clicked');
+        console.log('🖱️ Star clicked - toggling overlay');
         e.preventDefault();
         dsOverlay.classList.toggle('visible');
+        console.log('Overlay visible:', dsOverlay.classList.contains('visible'));
     });
 } else {
-    console.error('Elements not found:', {trigger, dsOverlay});
+    console.error('❌ Elements not found:', {trigger, dsOverlay});
 }
 
 const snakeTrigger = document.getElementById('snake-trigger');
