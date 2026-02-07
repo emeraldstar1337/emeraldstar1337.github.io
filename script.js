@@ -78,7 +78,7 @@ function init3D() {
 
 function animate() {
     requestAnimationFrame(animate);
-    if (pepperCan) pepperCan.rotation.y += 0.01;
+    if (pepperCan) pepperCan.rotation.y += 0.005;
     if (deathStar) deathStar.rotation.y += 0.005;
     renderer.render(scene, camera);
     dsRenderer.render(dsScene, dsCamera);
@@ -93,6 +93,10 @@ trigger.addEventListener('mouseenter', () => {
 
 trigger.addEventListener('mouseleave', () => {
     dsOverlay.classList.remove('visible');
+});
+
+trigger.addEventListener('click', () => {
+    dsOverlay.classList.toggle('visible');
 });
 
 const snakeTrigger = document.getElementById('snake-trigger');
