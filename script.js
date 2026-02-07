@@ -60,72 +60,90 @@ function init3D() {
     dsl2.position.set(-5, -3, 5);
     dsScene.add(dsl2);
 
-    // Create Death Star from basic geometry - always works
-    const deathStarGroup = new THREE.Group();
-    
-    // Main sphere
-    const mainSphere = new THREE.Mesh(
-        new THREE.SphereGeometry(4, 64, 64),
-        new THREE.MeshStandardMaterial({ 
-            color: 0x555555, 
-            metalness: 0.6, 
-            roughness: 0.4,
-            emissive: 0x111111
-        })
-    );
-    deathStarGroup.add(mainSphere);
-    
-    // Equator trench
-    const trenchGeometry = new THREE.TorusGeometry(4.05, 0.15, 16, 100);
-    const trenchMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x222222,
-        metalness: 0.8,
-        roughness: 0.3
-    });
-    const trench = new THREE.Mesh(trenchGeometry, trenchMaterial);
-    trench.rotation.x = Math.PI / 2;
-    deathStarGroup.add(trench);
-    
-    // Superlaser dish (concave)
-    const dishGeometry = new THREE.SphereGeometry(1.2, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
-    const dishMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x333333,
-        metalness: 0.9,
-        roughness: 0.2,
-        emissive: 0x00ff00,
-        emissiveIntensity: 0.2
-    });
-    const dish = new THREE.Mesh(dishGeometry, dishMaterial);
-    dish.rotation.x = Math.PI;
-    dish.position.set(2, 2, 2);
-    deathStarGroup.add(dish);
-    
-    // Surface details - random panels
-    for (let i = 0; i < 50; i++) {
-        const panel = new THREE.Mesh(
-            new THREE.BoxGeometry(0.3, 0.3, 0.05),
+    // Function to create procedural Death Star
+    function createProceduralDeathStar() {
+        const deathStarGroup = new THREE.Group();
+        
+        const mainSphere = new THREE.Mesh(
+            new THREE.SphereGeometry(4, 64, 64),
             new THREE.MeshStandardMaterial({ 
-                color: Math.random() > 0.5 ? 0x444444 : 0x333333,
-                metalness: 0.7,
-                roughness: 0.5
+                color: 0x555555, 
+                metalness: 0.6, 
+                roughness: 0.4,
+                emissive: 0x111111
             })
         );
+        deathStarGroup.add(mainSphere);
         
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.random() * Math.PI;
-        const radius = 4.08;
+        const trenchGeometry = new THREE.TorusGeometry(4.05, 0.15, 16, 100);
+        const trenchMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x222222,
+            metalness: 0.8,
+            roughness: 0.3
+        });
+        const trench = new THREE.Mesh(trenchGeometry, trenchMaterial);
+        trench.rotation.x = Math.PI / 2;
+        deathStarGroup.add(trench);
         
-        panel.position.x = radius * Math.sin(phi) * Math.cos(theta);
-        panel.position.y = radius * Math.sin(phi) * Math.sin(theta);
-        panel.position.z = radius * Math.cos(phi);
+        const dishGeometry = new THREE.SphereGeometry(1.2, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+        const dishMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x333333,
+            metalness: 0.9,
+            roughness: 0.2,
+            emissive: 0x00ff00,
+            emissiveIntensity: 0.2
+        });
+        const dish = new THREE.Mesh(dishGeometry, dishMaterial);
+        dish.rotation.x = Math.PI;
+        dish.position.set(2, 2, 2);
+        deathStarGroup.add(dish);
         
-        panel.lookAt(0, 0, 0);
-        deathStarGroup.add(panel);
+        for (let i = 0; i < 50; i++) {
+            const panel = new THREE.Mesh(
+                new THREE.BoxGeometry(0.3, 0.3, 0.05),
+                new THREE.MeshStandardMaterial({ 
+                    color: Math.random() > 0.5 ? 0x444444 : 0x333333,
+                    metalness: 0.7,
+                    roughness: 0.5
+                })
+            );
+            
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            const radius = 4.08;
+            
+            panel.position.x = radius * Math.sin(phi) * Math.cos(theta);
+            panel.position.y = radius * Math.sin(phi) * Math.sin(theta);
+            panel.position.z = radius * Math.cos(phi);
+            
+            panel.lookAt(0, 0, 0);
+            deathStarGroup.add(panel);
+        }
+        
+        return deathStarGroup;
     }
-    
-    deathStar = deathStarGroup;
-    dsScene.add(deathStar);
-    console.log('✓ Procedural Death Star created successfully');
+
+    // Try to load custom GLB model first
+    loader.load('assets/death_star.glb', 
+        (gltf) => {
+            deathStar = gltf.scene;
+            const box = new THREE.Box3().setFromObject(deathStar);
+            const center = box.getCenter(new THREE.Vector3());
+            deathStar.position.sub(center);
+            deathStar.scale.set(4, 4, 4);
+            dsScene.add(deathStar);
+            console.log('✓ Custom Death Star GLB loaded successfully');
+        },
+        (progress) => {
+            console.log('Loading Death Star GLB:', Math.round(progress.loaded / progress.total * 100) + '%');
+        },
+        (error) => {
+            console.log('⚠️ Custom GLB not found, using procedural Death Star');
+            deathStar = createProceduralDeathStar();
+            dsScene.add(deathStar);
+            console.log('✓ Procedural Death Star created');
+        }
+    );
 
     window.addEventListener('resize', () => {
         const width = container.offsetWidth;
