@@ -36,7 +36,7 @@ function init3D() {
     const dsContainer = document.getElementById('death-star-overlay');
     dsScene = new THREE.Scene();
     dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-    dsCamera.position.set(0, 100, 1100);
+    dsCamera.position.set(0, -100, 1100);
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     dsRenderer.setSize(window.innerWidth, window.innerHeight);
