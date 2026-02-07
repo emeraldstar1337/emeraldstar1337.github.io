@@ -55,10 +55,10 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    color: transparent;
     animation: chrome-shine 6s ease-in-out infinite;
-    display: inline-block;
+    display: inline;
     line-height: 1.2;
-    white-space: nowrap;
 }
 
 @keyframes chrome-shine { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 0% 100%; } }
@@ -67,7 +67,7 @@ body {
     cursor: pointer;
     position: relative;
     z-index: 100;
-    display: inline;
+    pointer-events: auto;
 }
 
 .cursor {
@@ -109,7 +109,11 @@ body {
     position: relative;
 }
 
-.about-card { text-align: center; cursor: pointer; }
+.about-card { 
+    text-align: center; 
+    cursor: pointer;
+    overflow: visible;
+}
 
 #snake-img {
     position: absolute;
@@ -117,7 +121,7 @@ body {
     left: calc(100% + 20px);
     transform: translateY(-50%) scale(0);
     width: 180px;
-    height: 120px;
+    height: auto;
     opacity: 0;
     pointer-events: none;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -134,8 +138,10 @@ body {
 @media (max-width: 768px) {
     #snake-img {
         left: 50%;
-        top: calc(100% + 20px);
+        top: calc(100% + 10px);
         transform: translate(-50%, 0) scale(0);
+        width: 90%;
+        max-width: 300px;
     }
     
     #snake-img.visible {
