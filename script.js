@@ -124,7 +124,7 @@ function init3D() {
             const box = new THREE.Box3().setFromObject(deathStar);
             const center = box.getCenter(new THREE.Vector3());
             deathStar.position.sub(center);
-            deathStar.scale.set(4, 4, 4);
+            deathStar.scale.set(0.15, 0.15, 0.15);
             dsScene.add(deathStar);
         },
         undefined,
