@@ -36,7 +36,7 @@ function init3D() {
     const dsContainer = document.getElementById('death-star-overlay');
     dsScene = new THREE.Scene();
     dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-    dsCamera.position.set(0, 0, 100);
+    dsCamera.position.set(0, 0, 250);
 
     dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     dsRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -47,16 +47,16 @@ function init3D() {
         dsContainer.appendChild(dsRenderer.domElement);
     }
 
-    dsScene.add(new THREE.AmbientLight(0xffffff, 3));
-    const dsl = new THREE.DirectionalLight(0xffffff, 5);
+    dsScene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const dsl = new THREE.DirectionalLight(0xffffff, 1.5);
     dsl.position.set(10, 10, 10);
     dsScene.add(dsl);
     
-    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 3);
+    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 0.8);
     dsl2.position.set(-10, -5, 10);
     dsScene.add(dsl2);
     
-    const dsl3 = new THREE.DirectionalLight(0xffffff, 3);
+    const dsl3 = new THREE.DirectionalLight(0xffffff, 0.5);
     dsl3.position.set(0, -10, -10);
     dsScene.add(dsl3);
 
