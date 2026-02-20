@@ -2,15 +2,15 @@ let scene, camera, renderer, pepperCan;
 let dsScene, dsCamera, dsRenderer, deathStar;
 
 function init3D() {
-    const container = document.getElementById('pepper-canvas-container');
+    const pepperContainer = document.getElementById('pepper-canvas-container');
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(35, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(35, pepperContainer.offsetWidth / pepperContainer.offsetHeight, 0.1, 1000);
     camera.position.set(0, 0, 8);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.setSize(pepperContainer.offsetWidth, pepperContainer.offsetHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    container.appendChild(renderer.domElement);
+    pepperContainer.appendChild(renderer.domElement);
 
     scene.add(new THREE.AmbientLight(0xffffff, 1.5));
     const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -124,29 +124,24 @@ function init3D() {
 
     loader.load('assets/death_star.glb', 
         (gltf) => {
-            console.log('GLB Death Star загружена успешно!');
             deathStar = gltf.scene;
             const box = new THREE.Box3().setFromObject(deathStar);
             const center = box.getCenter(new THREE.Vector3());
-            const size = new THREE.Vector3();
-            box.getSize(size);
             deathStar.position.sub(center);
             deathStar.scale.set(10, 10, 10);
             dsScene.add(deathStar);
-            console.log('GLB Death Star добавлена в сцену, размер:', size);
         },
-        (progress) => {
-            const percent = (progress.loaded / progress.total * 100).toFixed(0);
-            console.log(`Death Star загрузка: ${percent}%`);
-        },
-        (error) => {
-            console.error('Ошибка загрузки Death Star GLB:', error);
+        undefined,
+        () => {
+            deathStar = createProceduralDeathStar();
+            deathStar.scale.set(10, 10, 10);
+            dsScene.add(deathStar);
         }
     );
 
     window.addEventListener('resize', () => {
-        const width = container.offsetWidth;
-        const height = container.offsetHeight;
+        const width = pepperContainer.offsetWidth;
+        const height = pepperContainer.offsetHeight;
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
@@ -173,6 +168,7 @@ const dsOverlay = document.getElementById('death-star-overlay');
 
 if (trigger && dsOverlay) {
     let isTouch = false;
+    let isClicked = false;
 
     trigger.addEventListener('touchstart', (e) => {
         isTouch = true;
@@ -181,23 +177,37 @@ if (trigger && dsOverlay) {
     }, { passive: false });
 
     trigger.addEventListener('mouseenter', () => {
-        if (!isTouch) dsOverlay.classList.add('visible');
+        if (!isTouch && !isClicked) dsOverlay.classList.add('visible');
     });
 
     trigger.addEventListener('mouseleave', () => {
-        if (!isTouch) dsOverlay.classList.remove('visible');
+        if (!isTouch && !isClicked) dsOverlay.classList.remove('visible');
     });
     
     trigger.addEventListener('click', (e) => {
         if (isTouch) return;
         e.preventDefault();
-        dsOverlay.classList.toggle('visible');
+        isClicked = !isClicked;
+        if (isClicked) {
+            dsOverlay.classList.add('visible');
+        } else {
+            dsOverlay.classList.remove('visible');
+        }
+    });
+
+    dsOverlay.addEventListener('click', () => {
+        if (isClicked) {
+            isClicked = false;
+            dsOverlay.classList.remove('visible');
+        }
     });
 }
 
 const snakeTrigger = document.getElementById('snake-trigger');
 const snakeImg = document.getElementById('snake-img');
 const container = document.querySelector('.container');
+
+let snakeTimeout;
 
 snakeTrigger.onclick = () => {
     snakeImg.classList.add('visible');
@@ -206,7 +216,9 @@ snakeTrigger.onclick = () => {
         container.classList.add('flag-active');
     }
     
-    setTimeout(() => { 
+    clearTimeout(snakeTimeout);
+    
+    snakeTimeout = setTimeout(() => { 
         snakeImg.classList.remove('visible');
         if (window.innerWidth <= 768) {
             container.classList.remove('flag-active');
