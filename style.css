@@ -76,7 +76,6 @@ body {
     cursor: pointer;
     position: relative;
     z-index: 100;
-    pointer-events: auto;
     background: linear-gradient(to bottom, #fff 0%, #fff 45%, #888 50%, #333 55%, #fff 100%);
     background-size: 100% 200%;
     -webkit-background-clip: text;
@@ -227,7 +226,6 @@ body {
 }
 #death-star-overlay.visible { 
     opacity: 1;
-    pointer-events: auto;
 }
 #death-star-overlay canvas {
     width: 100% !important;
