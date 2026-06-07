@@ -1,30 +1,70 @@
 :root {
-    --bg-dark: #020202;
-    --accent-purple: #bc6ff1;
+    --md-bg: #0c0b10;
+    --md-surface: rgba(28, 25, 38, 0.45);
+    --md-surface-hover: rgba(45, 40, 60, 0.65);
+    --md-surface-container: rgba(30, 27, 40, 0.8);
+    --md-primary: #d0bcff;
+    --md-on-primary: #381e72;
+    --md-primary-container: rgba(208, 188, 255, 0.08);
+    --md-on-primary-container: #eaddff;
+    --md-secondary-container: rgba(74, 68, 88, 0.3);
+    --md-on-secondary-container: #e8def8;
+    --md-outline: rgba(147, 143, 153, 0.2);
+    --md-outline-hover: rgba(208, 188, 255, 0.4);
+    --md-error: #ffb4ab;
+    --md-error-container: rgba(147, 0, 10, 0.3);
+    --md-on-error-container: #ffdad6;
+    --md-text-primary: #e6e1e5;
+    --md-text-secondary: #c9c5d0;
+    --md-text-tertiary: #938f99;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    cursor: crosshair; 
+    -webkit-tap-highlight-color: transparent;
+}
 
 body {
-    background-color: var(--bg-dark);
-    color: #fff;
-    font-family: 'Space Grotesk', sans-serif;
+    background-color: var(--md-bg);
+    color: var(--md-text-primary);
+    font-family: 'Outfit', 'Space Grotesk', sans-serif;
     overflow-x: hidden;
     min-height: 100vh;
+    letter-spacing: 0.2px;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--md-bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--md-outline);
+    border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--md-primary);
 }
 
 .parallax-bg {
     position: fixed;
-    inset: -10%; width: 120%; height: 120%;
+    inset: -10%; 
+    width: 120%; 
+    height: 120%;
     background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000') center/cover;
-    filter: blur(80px) brightness(0.1);
+    filter: blur(90px) brightness(0.12);
     z-index: -2;
 }
 
 .glow-overlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 50% 10%, rgba(188, 111, 241, 0.08) 0%, transparent 60%);
+    background: radial-gradient(circle at 50% 10%, rgba(208, 188, 255, 0.12) 0%, transparent 65%);
     z-index: -1;
 }
 
@@ -34,7 +74,7 @@ body {
     padding: 60px 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
     position: relative;
     z-index: auto; 
     transition: padding-bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -46,7 +86,7 @@ body {
 
 .hero { 
     text-align: center; 
-    margin-bottom: 30px;
+    margin-bottom: 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,14 +95,16 @@ body {
 }
 
 .chrome-title {
-    font-size: clamp(2rem, 8vw, 3rem);
+    font-size: clamp(2.2rem, 9vw, 3.2rem);
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
 }
 
 .chrome-title::before {
-    content: 'the emerald ';
-    background: linear-gradient(to bottom, #fff 0%, #fff 45%, #888 50%, #333 55%, #fff 100%);
+    content: 'the emeraldStar ';
+    font-family: 'Space Grotesk', sans-serif;
+    background: linear-gradient(to bottom, #ffffff 0%, #e1d5f2 40%, #b099d4 50%, #4f378b 60%, #ffffff 100%);
     background-size: 100% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -70,26 +112,37 @@ body {
     animation: chrome-shine 6s ease-in-out infinite;
 }
 
-@keyframes chrome-shine { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 0% 100%; } }
+/* Backwards compatibility fix for chrome-title class usage */
+.chrome-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes chrome-shine { 
+    0%, 100% { background-position: 0% 0%; } 
+    50% { background-position: 0% 100%; } 
+}
 
 #star-trigger {
     cursor: pointer;
     position: relative;
     z-index: 100;
-    background: linear-gradient(to bottom, #fff 0%, #fff 45%, #888 50%, #333 55%, #fff 100%);
+    background: linear-gradient(to bottom, #ffffff 0%, #e1d5f2 40%, #b099d4 50%, #4f378b 60%, #ffffff 100%);
     background-size: 100% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: chrome-shine 6s ease-in-out infinite;
     display: inline-block;
-    padding: 10px 20px;
-    margin: -10px -20px;
+    padding: 10px 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    margin-left: 2px;
 }
 
 .cursor {
-    color: #fff;
-    -webkit-text-fill-color: #fff;
+    color: var(--md-primary);
+    -webkit-text-fill-color: var(--md-primary);
     background: none;
     animation: blink 0.8s step-end infinite;
     font-weight: 200;
@@ -98,39 +151,56 @@ body {
 @keyframes blink { 50% { opacity: 0; } }
 
 .subtitle-container {
-    margin-top: 10px;
+    margin-top: 12px;
     display: block;
     width: 100%;
 }
 
 .subtitle {
-    font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.2);
-    letter-spacing: 2px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--md-text-tertiary);
+    letter-spacing: 3px;
     text-transform: uppercase;
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
 }
 
 .subtitle:hover {
-    color: var(--accent-purple);
-    text-shadow: 0 0 10px var(--accent-purple);
+    color: var(--md-primary);
+    text-shadow: 0 0 12px rgba(208, 188, 255, 0.6);
 }
 
+/* MD3 Cards Implementation */
 .card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 32px;
-    padding: 22px;
-    transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+    background: var(--md-surface);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--md-outline);
+    border-radius: 28px;
+    padding: 24px;
+    transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
     position: relative;
     z-index: 2;
+}
+
+.card:hover {
+    background: var(--md-surface-hover);
+    border-color: var(--md-outline-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 2px rgba(208, 188, 255, 0.2);
 }
 
 .about-card { 
     text-align: center; 
     cursor: pointer;
     overflow: visible;
+    font-weight: 500;
+    color: var(--md-text-secondary);
+}
+
+.about-card p {
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
 }
 
 #snake-img {
@@ -144,8 +214,9 @@ body {
     pointer-events: none;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 5;
-    border: 2px solid rgba(255, 215, 0, 0.3);
-    border-radius: 8px;
+    border: 2px solid rgba(208, 188, 255, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 #snake-img.visible {
@@ -167,7 +238,7 @@ body {
         width: 85%;
         max-width: 280px;
         transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 10px 45px rgba(208, 188, 255, 0.25);
         z-index: 1500;
     }
     
@@ -177,56 +248,198 @@ body {
     }
 }
 
-.system-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.label { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
-.chips { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
-.chip {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 14px;
-    border-radius: 16px;
-    font-size: 0.75rem;
-    display: flex; align-items: center; gap: 8px;
-    border: 1px solid rgba(255,255,255,0.05);
+/* System items & chip styling */
+.system-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
-.chip img { width: 18px; height: 18px; }
 
-.links-grid { display: flex; flex-direction: column; gap: 8px; }
-.link-card { text-decoration: none; color: #fff; padding: 18px 24px; }
-.link-inner { display: flex; align-items: center; gap: 14px; }
-.link-inner img { width: 18px; }
+.system-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
 
-.important-card { text-decoration: none; border: 1px dashed rgba(188, 111, 241, 0.3); text-align: center; }
-.glitch-text { color: var(--accent-purple); font-size: 0.75rem; }
+.label { 
+    color: var(--md-text-tertiary); 
+    font-size: 0.8rem; 
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-.pepper-card { height: 240px; padding: 0; overflow: hidden; }
-#pepper-canvas-container { width: 100%; height: 100%; }
-.card-label { position: absolute; bottom: 12px; right: 20px; font-size: 0.55rem; color: rgba(255,255,255,0.2); }
+.chips { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    align-items: flex-end; 
+}
 
+.chip {
+    background: var(--md-primary-container);
+    color: var(--md-on-secondary-container);
+    padding: 8px 16px;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    border: 1px solid var(--md-outline);
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+.chip:hover {
+    background: var(--md-secondary-container);
+    border-color: var(--md-primary);
+}
+
+.chip img { 
+    width: 18px; 
+    height: 18px; 
+}
+
+/* Links grid & elements */
+.links-grid { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+}
+
+.link-card { 
+    text-decoration: none; 
+    color: var(--md-text-primary); 
+    padding: 20px 24px; 
+}
+
+.link-inner { 
+    display: flex; 
+    align-items: center; 
+    gap: 16px; 
+}
+
+.link-inner img { 
+    width: 20px; 
+    height: 20px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.link-card:hover .link-inner img {
+    transform: scale(1.15);
+}
+
+.link-card span {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Important information card */
+.important-card { 
+    text-decoration: none; 
+    border: 1.5px dashed var(--md-outline); 
+    background: rgba(255, 180, 171, 0.02);
+    text-align: center; 
+    overflow: hidden;
+}
+
+.important-card:hover {
+    border-color: var(--md-error);
+    background: var(--md-error-container);
+    box-shadow: 0 8px 24px rgba(147, 0, 10, 0.25);
+}
+
+.glitch-text { 
+    color: var(--md-error); 
+    font-size: 0.8rem; 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+.important-card:hover .glitch-text {
+    color: var(--md-on-error-container);
+    text-shadow: 0 0 8px var(--md-error);
+}
+
+/* Pepper Can Visualizer card */
+.pepper-card { 
+    height: 250px; 
+    padding: 0; 
+    overflow: hidden; 
+    border-radius: 28px;
+    border: 1px solid var(--md-outline);
+}
+
+#pepper-canvas-container { 
+    width: 100%; 
+    height: 100%; 
+}
+
+.card-label { 
+    position: absolute; 
+    bottom: 16px; 
+    right: 20px; 
+    font-size: 0.6rem; 
+    font-weight: 600;
+    color: var(--md-text-tertiary); 
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Easter Egg: John Banan snackbar style banner */
 #john-banan {
     position: fixed;
-    top: -100px; left: 50%; transform: translateX(-50%);
-    background: #111; color: #fff; border: 1px solid #bc6ff1;
-    padding: 14px 30px; border-radius: 20px;
-    z-index: 5000; transition: all 0.5s ease;
+    top: -100px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    background: var(--md-surface-container); 
+    color: var(--md-text-primary); 
+    border: 1px solid var(--md-primary);
+    padding: 16px 32px; 
+    border-radius: 100px;
+    z-index: 5000; 
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 1px rgba(208, 188, 255, 0.3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
-#john-banan.active { top: 30px; }
 
+#john-banan.active { 
+    top: 32px; 
+}
+
+#john-banan:hover {
+    background: var(--md-surface-hover);
+    transform: translateX(-50%) scale(1.03);
+}
+
+/* Easter Egg: Death Star fullscreen overlay */
 #death-star-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 9999;
     opacity: 0;
-    transition: opacity 0.6s ease;
-    background: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.7s cubic-bezier(0.2, 1, 0.2, 1);
+    background: rgba(4, 3, 6, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
+
 #death-star-overlay.visible { 
     opacity: 1;
+    pointer-events: auto; /* enable click to close */
 }
+
 #death-star-overlay canvas {
     width: 100% !important;
     height: 100% !important;
