@@ -1,22 +1,15 @@
 :root {
     --md-bg: #000000;
-    --md-surface: rgba(18, 18, 18, 0.6);
-    --md-surface-hover: rgba(30, 30, 30, 0.85);
-    --md-surface-container: rgba(22, 22, 22, 0.9);
+    --md-surface: #070707;
+    --md-surface-container: #101010;
+    --md-surface-container-high: #181818;
     --md-primary: #ffffff;
     --md-on-primary: #000000;
-    --md-primary-container: rgba(255, 255, 255, 0.06);
-    --md-on-primary-container: #ffffff;
-    --md-secondary-container: rgba(255, 255, 255, 0.1);
-    --md-on-secondary-container: #ffffff;
-    --md-outline: rgba(255, 255, 255, 0.08);
-    --md-outline-hover: rgba(255, 255, 255, 0.25);
-    --md-error: #e0e0e0;
-    --md-error-container: rgba(255, 255, 255, 0.04);
-    --md-on-error-container: #ffffff;
+    --md-outline: #222222;
+    --md-outline-hover: #444444;
     --md-text-primary: #ffffff;
     --md-text-secondary: #a6a6a6;
-    --md-text-tertiary: #666666;
+    --md-text-tertiary: #555555;
 }
 
 * { 
@@ -36,7 +29,7 @@ body {
     letter-spacing: 0.2px;
 }
 
-/* Grayscale custom scrollbar */
+/* Grayscale scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -44,28 +37,28 @@ body {
     background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-    background: #222222;
+    background: #1c1c1c;
     border-radius: 100px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #444444;
+    background: #333333;
 }
 
 .parallax-bg {
     position: fixed;
-    inset: -10%; 
-    width: 120%; 
-    height: 120%;
-    background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000') center/cover;
-    filter: blur(100px) brightness(0.04);
+    inset: 0; 
+    width: 100%; 
+    height: 100%;
+    background: radial-gradient(circle at 50% 15%, #141414 0%, #000000 80%);
     z-index: -2;
 }
 
 .glow-overlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+    background: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
     z-index: -1;
+    pointer-events: none;
 }
 
 .container {
@@ -163,24 +156,23 @@ body {
     text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
 }
 
-/* MD3 Expressive Cards */
+/* MD3 Expressive (MD3E) Asymmetric Morphing Cards */
 .card {
-    background: var(--md-surface);
-    backdrop-filter: blur(35px);
-    -webkit-backdrop-filter: blur(35px);
-    border: 1.5px solid var(--md-outline);
-    border-radius: 28px;
+    background: var(--md-surface-container);
+    border: 1px solid var(--md-outline);
+    border-radius: 32px 8px 32px 8px; /* Asymmetric MD3E corners */
     padding: 24px;
-    transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
     z-index: 2;
 }
 
 .card:hover {
-    background: var(--md-surface-hover);
+    border-radius: 8px 32px 8px 32px; /* Morphing asymmetric corners on hover */
+    background: var(--md-surface-container-high);
     border-color: var(--md-outline-hover);
     transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.15);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.9);
 }
 
 .about-card { 
@@ -207,7 +199,7 @@ body {
     pointer-events: none;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 5;
-    border: 2px solid rgba(255, 255, 255, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
@@ -241,7 +233,7 @@ body {
     }
 }
 
-/* System items & chip styling */
+/* System Card */
 .system-card {
     display: flex;
     flex-direction: column;
@@ -270,22 +262,23 @@ body {
 }
 
 .chip {
-    background: var(--md-primary-container);
+    background: rgba(255, 255, 255, 0.04);
     color: #ffffff;
     padding: 8px 16px;
-    border-radius: 100px; /* Fully rounded capsules for MD3 Expressive */
+    border-radius: 100px; /* Capsule shape for chips */
     font-size: 0.8rem;
     font-weight: 500;
     display: flex; 
     align-items: center; 
     gap: 10px;
     border: 1px solid var(--md-outline);
-    transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .chip:hover {
-    background: var(--md-secondary-container);
+    background: rgba(255, 255, 255, 0.1);
     border-color: #ffffff;
+    transform: scale(1.05);
 }
 
 .chip img { 
@@ -293,7 +286,7 @@ body {
     height: 18px; 
 }
 
-/* Links grid */
+/* MD3E Morphing Buttons for Links Grid */
 .links-grid { 
     display: flex; 
     flex-direction: column; 
@@ -303,7 +296,20 @@ body {
 .link-card { 
     text-decoration: none; 
     color: var(--md-text-primary); 
+    background: var(--md-surface-container-high);
+    border: 1px solid var(--md-outline);
+    border-radius: 16px;
     padding: 20px 24px; 
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.link-card:hover {
+    border-radius: 100px; /* Morph button to capsule on hover */
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border-color: var(--md-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(255, 255, 255, 0.12);
 }
 
 .link-inner { 
@@ -316,11 +322,12 @@ body {
     width: 20px; 
     height: 20px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .link-card:hover .link-inner img {
-    transform: scale(1.15);
+    filter: invert(1) brightness(0);
+    transform: scale(1.1);
 }
 
 .link-card span {
@@ -328,19 +335,24 @@ body {
     font-weight: 500;
 }
 
-/* Outlined banner / important info */
+/* MD3E Morphing Outlined Card for Important Info */
 .important-card { 
     text-decoration: none; 
     border: 1.5px dashed var(--md-outline); 
     background: rgba(255, 255, 255, 0.01);
     text-align: center; 
     overflow: hidden;
+    padding: 20px;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .important-card:hover {
+    border-style: solid;
     border-color: #ffffff;
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 100px; /* Morph warning card to capsule on hover */
+    box-shadow: 0 10px 28px rgba(255, 255, 255, 0.08);
 }
 
 .glitch-text { 
@@ -357,13 +369,18 @@ body {
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
-/* Pepper Can card */
+/* Pepper Can Visualizer */
 .pepper-card { 
     height: 250px; 
     padding: 0; 
     overflow: hidden; 
-    border-radius: 28px;
+    border-radius: 32px 8px 32px 8px; /* Matches asymmetric styling */
     border: 1px solid var(--md-outline);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pepper-card:hover {
+    border-radius: 8px 32px 8px 32px;
 }
 
 #pepper-canvas-container { 
@@ -382,7 +399,7 @@ body {
     text-transform: uppercase;
 }
 
-/* Snackbar John Banan banner */
+/* John Banan Banner */
 #john-banan {
     position: fixed;
     top: -100px; 
@@ -408,11 +425,11 @@ body {
 }
 
 #john-banan:hover {
-    background: #2a2a2a;
+    background: #222222;
     transform: translateX(-50%) scale(1.03);
 }
 
-/* Death Star Overlay */
+/* Fullscreen Death Star Overlay */
 #death-star-overlay {
     position: fixed;
     inset: 0;
@@ -420,7 +437,7 @@ body {
     z-index: 9999;
     opacity: 0;
     transition: opacity 0.7s cubic-bezier(0.2, 1, 0.2, 1);
-    background: rgba(0, 0, 0, 0.92);
+    background: rgba(0, 0, 0, 0.95);
     display: flex;
     align-items: center;
     justify-content: center;
