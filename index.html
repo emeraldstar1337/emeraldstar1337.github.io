@@ -2,97 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#101914">
+    <meta name="description" content="the emerald star — May the Force be with you.">
     <title>the emerald star▌</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/star.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
-
-    <div class="parallax-bg" id="bg"></div>
-    <div class="glow-overlay"></div>
+    <div class="floating-shapes" aria-hidden="true">
+        <div class="shape-orbit orbit-one"><svg viewBox="0 0 100 100"><path d="M50 5C57 5 58 22 65 25S85 17 90 25S80 43 83 50S100 58 96 67S77 69 72 75S71 97 61 98S47 81 40 82S25 96 17 90S23 70 20 64S1 56 3 46S22 39 26 33S25 12 34 9S43 5 50 5Z"/></svg></div>
+        <div class="shape-orbit orbit-two"><svg viewBox="0 0 100 100"><path d="M50 2C60 32 68 40 98 50C68 60 60 68 50 98C40 68 32 60 2 50C32 40 40 32 50 2Z"/></svg></div>
+        <div class="shape-orbit orbit-three"><svg viewBox="0 0 100 100"><rect x="13" y="13" width="74" height="74" rx="26" transform="rotate(22 50 50)"/></svg></div>
+        <div class="shape-orbit orbit-four"><svg viewBox="0 0 100 100"><path d="M50 5C78 5 95 29 95 50S73 94 50 94S5 74 5 50S25 5 50 5Z"/></svg></div>
+        <div class="shape-orbit orbit-five"><svg viewBox="0 0 100 100"><path d="M50 8L70 27L95 36L79 58L76 85L50 80L24 85L21 58L5 36L30 27Z"/></svg></div>
+        <div class="shape-orbit orbit-six"><svg viewBox="0 0 100 100"><path d="M50 4C64 4 64 23 77 23S100 40 88 50S95 77 79 80S65 100 50 91S23 100 20 80S1 66 12 50S0 25 23 23S35 4 50 4Z"/></svg></div>
+    </div>
 
     <main class="container">
         <header class="hero">
-            <h1 class="chrome-title"><span class="chrome-prefix">/home/</span><span id="star-trigger">emerald</span><span class="cursor">▌</span></h1>
-            <div class="subtitle-container">
+            <div class="hero-text">
+                <h1><span class="chrome-prefix">/home/</span><span class="name-line"><button type="button" id="star-trigger" aria-haspopup="dialog" aria-controls="death-star-overlay" aria-expanded="false">emerald</button><span class="cursor" aria-hidden="true">▌</span></span></h1>
                 <p class="subtitle">May the Force be with you.</p>
             </div>
+            <svg class="hero-star" viewBox="0 0 120 120" aria-hidden="true"><path d="M60 7C66 7 72 35 78 40S109 48 109 55S86 69 83 75S78 109 71 109S58 85 51 83S19 88 15 81S35 58 35 51S26 21 32 18S53 32 57 28S54 7 60 7Z"/></svg>
         </header>
 
-        <section class="card about-card" id="snake-trigger">
-            <p>Don't tread on me</p>
-            <img src="assets/flag.png" id="snake-img" alt="Gadsden flag">
-        </section>
+        <div class="profile-grid">
+            <div class="profile-main">
+                <button type="button" class="card about-card" id="snake-trigger" aria-controls="snake-img" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5C7 2 17 2 17 6C17 10 6 8 6 12C6 16 18 13 18 18C18 21 8 22 7 18M18 5l3-1M18 5l2 2"/></svg>
+                    <span>Don't tread on me</span>
+                    <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                </button>
 
-        <section class="card system-card">
-            <div class="system-item">
-                <span class="label">OS:</span>
-                <div class="chips">
-                    <span class="chip"><img src="https://cdn.simpleicons.org/archlinux/1793D1"> Arch Linux</span>
-                </div>
+                <section class="links-grid" aria-label="Links">
+                    <a href="https://t.me/emeraldfall" target="_blank" rel="noopener noreferrer" class="card link-card telegram-card">
+                        <span class="link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4L3 11l6 2 2 7 4-5 4 3L21 4ZM9 13l10-7-8 9"/></svg></span>
+                        <span class="link-label">Telegram</span>
+                        <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                    </a>
+                    <a href="https://t.me/faststarsro_bot?start=ref5550544399" target="_blank" rel="noopener noreferrer" class="card link-card">
+                        <span class="link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></span>
+                        <span class="link-label">Stars Shop</span>
+                        <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                    </a>
+                    <a href="https://t.me/SnowfallVPN_bot?start=referral_5550544399" target="_blank" rel="noopener noreferrer" class="card link-card">
+                        <span class="link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20 6v5c0 5-4 8-8 10-4-2-8-5-8-10V6l8-3ZM9 12l2 2 4-4"/></svg></span>
+                        <span class="link-label">VPN</span>
+                        <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                    </a>
+                    <a href="https://open.spotify.com/playlist/6LHHmGnB7rndcD5PDrdv7T?si=56d65c3460734f97" target="_blank" rel="noopener noreferrer" class="card link-card spotify-card">
+                        <span class="link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M7 9c4-1 7-1 11 1M7 12c3-1 6-1 10 1M8 15c3-1 5-1 8 1"/></svg></span>
+                        <span class="link-label">Spotify Playlist</span>
+                        <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                    </a>
+                    <a href="https://steamcommunity.com/id/lordpavv" target="_blank" rel="noopener noreferrer" class="card link-card">
+                        <span class="link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="17" cy="7" r="4"/><circle cx="8" cy="17" r="3"/><path d="m10 15 4-5M11 18l7-7M5 16l-3-2"/></svg></span>
+                        <span class="link-label">Steam</span>
+                        <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                    </a>
+                    <a href="https://github.com/emeraldstar1337" target="_blank" rel="noopener noreferrer" class="card link-card github-card">
+                        <span class="link-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21v-4c-4 1-4-2-6-2M15 21v-4c0-1-.3-2-1-2 4-.5 6-2 6-6 0-1-.4-2-1-3 0-1 .2-2-.3-3-2 0-3 1-4 2a13 13 0 0 0-5.4 0C8 4 7 3 5 3c-.5 1-.3 2-.3 3C4 7 4 8 4 9c0 4 2 5.5 6 6-.7.4-1 1-1 2"/></svg></span>
+                        <span class="link-label">GitHub</span>
+                        <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                    </a>
+                </section>
+
+                <a href="https://telegra.ph/ochehn-vazhnaya-infa-02-07" target="_blank" rel="noopener noreferrer" class="card important-card">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v.1"/></svg>
+                    <span>Important information</span>
+                    <svg class="card-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                </a>
             </div>
-            <div class="system-item">
-                <span class="label">Phone:</span>
-                <div class="chips">
-                    <span class="chip"><img src="https://cdn.simpleicons.org/google/4285F4"> Google Pixel 8 Pro</span>
-                </div>
-            </div>
-        </section>
 
-        <section class="links-grid">
-            <a href="https://t.me/emeraldfall" target="_blank" class="card link-card">
-                <div class="link-inner">
-                    <img src="https://cdn.simpleicons.org/telegram/white">
-                    <span>Telegram</span>
-                </div>
-            </a>
-            
-            <a href="https://t.me/faststarsro_bot?start=ref5550544399" target="_blank" class="card link-card">
-                <div class="link-inner">
-                    <img src="https://cdn.simpleicons.org/telegram/white">
-                    <span>Stars Shop</span>
-                </div>
-            </a>
+            <aside class="profile-side">
+                <section class="card system-card" aria-label="Devices">
+                    <div class="system-item"><span class="label">OS:</span><span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 20-6-3-3-7-3 7-6 3 9-20Z"/></svg>Arch Linux</span></div>
+                    <div class="system-item"><span class="label">Phone:</span><span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M11 19h2"/></svg>Google Pixel 8 Pro</span></div>
+                </section>
 
-            <a href="https://t.me/SnowfallVPN_bot?start=referral_5550544399" target="_blank" class="card link-card">
-                <div class="link-inner">
-                    <img src="https://cdn.simpleicons.org/telegram/white">
-                    <span>VPN</span>
-                </div>
-            </a>
-
-            <a href="https://open.spotify.com/playlist/6LHHmGnB7rndcD5PDrdv7T?si=56d65c3460734f97" target="_blank" class="card link-card">
-                <div class="link-inner">
-                    <img src="https://cdn.simpleicons.org/spotify/white">
-                    <span>Spotify Playlist</span>
-                </div>
-            </a>
-            <a href="https://steamcommunity.com/id/lordpavv" target="_blank" class="card link-card">
-                <div class="link-inner">
-                    <img src="https://cdn.simpleicons.org/steam/white">
-                    <span>Steam</span>
-                </div>
-            </a>
-        </section>
-
-        <a href="https://telegra.ph/ochehn-vazhnaya-infa-02-07" target="_blank" class="card important-card">
-            <div class="restricted-box">
-                <span class="glitch-text">Important information</span>
-            </div>
-        </a>
-
-        <section class="card pepper-card">
-            <div id="pepper-canvas-container"></div>
-            <div class="card-label">Visualizer: DR PEPPER CAN</div>
-        </section>
+                <section class="card pepper-card" aria-label="Visualizer: DR PEPPER CAN">
+                    <div class="pepper-orbit" aria-hidden="true"></div>
+                    <div id="pepper-canvas-container" aria-hidden="true"></div>
+                    <div class="pepper-fallback" aria-hidden="true"><span>Dr Pepper</span><i></i></div>
+                    <div class="card-label">Visualizer: DR PEPPER CAN</div>
+                </section>
+            </aside>
+        </div>
     </main>
 
-    <div id="john-banan">Jonh Banan 773 is here.</div>
-    <div id="death-star-overlay"></div>
-
-    <script src="script.js"></script>
+    <img src="assets/flag.png" id="snake-img" alt="Gadsden flag" aria-hidden="true">
+    <button type="button" id="john-banan" tabindex="-1" aria-hidden="true">Jonh Banan 773 is here.</button>
+    <dialog id="death-star-overlay" aria-label="Death Star">
+        <div id="death-star-canvas-container" aria-hidden="true"></div>
+        <div class="death-star-fallback" aria-hidden="true"><div class="death-star-dish"></div></div>
+        <button type="button" class="close-button" aria-label="Close Death Star" autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </dialog>
 </body>
 </html>
