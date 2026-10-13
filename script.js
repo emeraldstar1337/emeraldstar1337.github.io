@@ -1,249 +1,333 @@
-let scene, camera, renderer, pepperCan;
-let dsScene, dsCamera, dsRenderer, deathStar;
-
-function init3D() {
-    const pepperContainer = document.getElementById('pepper-canvas-container');
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(35, pepperContainer.offsetWidth / pepperContainer.offsetHeight, 0.1, 1000);
-    camera.position.set(0, 0, 8);
-
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(pepperContainer.offsetWidth, pepperContainer.offsetHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    pepperContainer.appendChild(renderer.domElement);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 1.5));
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5);
-    scene.add(light);
-
-    const loader = new THREE.GLTFLoader();
-    
-    loader.load('assets/dr_pepper_can.glb', (gltf) => {
-        pepperCan = gltf.scene;
-        const box = new THREE.Box3().setFromObject(pepperCan);
-        const center = box.getCenter(new THREE.Vector3());
-        pepperCan.position.sub(center);
-        pepperCan.scale.set(1.2, 1.2, 1.2);
-        scene.add(pepperCan);
-    }, undefined, () => {
-        const geo = new THREE.CylinderGeometry(1, 1, 2.5, 32);
-        const mat = new THREE.MeshStandardMaterial({ color: 0x7a0000, metalness: 0.8, roughness: 0.3 });
-        pepperCan = new THREE.Mesh(geo, mat);
-        scene.add(pepperCan);
-    });
-
-    const dsContainer = document.getElementById('death-star-overlay');
-    dsScene = new THREE.Scene();
-    dsCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-    dsCamera.position.set(0, -125, 1100);
-
-    dsRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    dsRenderer.setSize(window.innerWidth, window.innerHeight);
-    dsRenderer.setPixelRatio(window.devicePixelRatio);
-    dsRenderer.setClearColor(0x000000, 1);
-    
-    if (dsContainer) {
-        dsContainer.appendChild(dsRenderer.domElement);
-    }
-
-    dsScene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const dsl = new THREE.DirectionalLight(0xffffff, 1.5);
-    dsl.position.set(10, 10, 10);
-    dsScene.add(dsl);
-    
-    const dsl2 = new THREE.DirectionalLight(0xaaaaff, 0.8);
-    dsl2.position.set(-10, -5, 10);
-    dsScene.add(dsl2);
-    
-    const dsl3 = new THREE.DirectionalLight(0xffffff, 0.5);
-    dsl3.position.set(0, -10, -10);
-    dsScene.add(dsl3);
-
-    function createProceduralDeathStar() {
-        const deathStarGroup = new THREE.Group();
-        
-        const mainSphere = new THREE.Mesh(
-            new THREE.SphereGeometry(35, 64, 64),
-            new THREE.MeshStandardMaterial({ 
-                color: 0xaaaaaa, 
-                metalness: 0.4, 
-                roughness: 0.6,
-                emissive: 0x333333
-            })
-        );
-        deathStarGroup.add(mainSphere);
-        
-        const trenchGeometry = new THREE.TorusGeometry(35.8, 1.5, 16, 100);
-        const trenchMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x666666,
-            metalness: 0.6,
-            roughness: 0.5
-        });
-        const trench = new THREE.Mesh(trenchGeometry, trenchMaterial);
-        trench.rotation.x = Math.PI / 2;
-        deathStarGroup.add(trench);
-        
-        const dishGeometry = new THREE.SphereGeometry(10, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
-        const dishMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x777777,
-            metalness: 0.7,
-            roughness: 0.4,
-            emissive: 0x00ff00,
-            emissiveIntensity: 0.4
-        });
-        const dish = new THREE.Mesh(dishGeometry, dishMaterial);
-        dish.rotation.x = Math.PI;
-        dish.position.set(18, 18, 18);
-        deathStarGroup.add(dish);
-        
-        for (let i = 0; i < 100; i++) {
-            const panel = new THREE.Mesh(
-                new THREE.BoxGeometry(2.5, 2.5, 0.4),
-                new THREE.MeshStandardMaterial({ 
-                    color: Math.random() > 0.5 ? 0x888888 : 0x777777,
-                    metalness: 0.5,
-                    roughness: 0.7
-                })
-            );
-            
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.random() * Math.PI;
-            const radius = 36;
-            
-            panel.position.x = radius * Math.sin(phi) * Math.cos(theta);
-            panel.position.y = radius * Math.sin(phi) * Math.sin(theta);
-            panel.position.z = radius * Math.cos(phi);
-            
-            panel.lookAt(0, 0, 0);
-            deathStarGroup.add(panel);
-        }
-        
-        return deathStarGroup;
-    }
-
-    loader.load('assets/death_star.glb', 
-        (gltf) => {
-            deathStar = gltf.scene;
-            const box = new THREE.Box3().setFromObject(deathStar);
-            const center = box.getCenter(new THREE.Vector3());
-            deathStar.position.sub(center);
-            deathStar.scale.set(10, 10, 10);
-            dsScene.add(deathStar);
-        },
-        undefined,
-        () => {
-            deathStar = createProceduralDeathStar();
-            deathStar.scale.set(10, 10, 10);
-            dsScene.add(deathStar);
-        }
-    );
-
-    window.addEventListener('resize', () => {
-        const width = pepperContainer.offsetWidth;
-        const height = pepperContainer.offsetHeight;
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-
-        dsCamera.aspect = window.innerWidth / window.innerHeight;
-        dsCamera.updateProjectionMatrix();
-        dsRenderer.setSize(window.innerWidth, window.innerHeight);
-    });
-}
-
-function animate() {
-    requestAnimationFrame(animate);
-    if (pepperCan) pepperCan.rotation.y += 0.005;
-    if (deathStar) deathStar.rotation.y += 0.005;
-    
-    renderer.render(scene, camera);
-    if (dsRenderer && dsScene && dsCamera) {
-        dsRenderer.render(dsScene, dsCamera);
-    }
-}
-
 const trigger = document.getElementById('star-trigger');
-const dsOverlay = document.getElementById('death-star-overlay');
+const starDialog = document.getElementById('death-star-overlay');
+const closeButton = starDialog.querySelector('.close-button');
+const pepperCard = document.querySelector('.pepper-card');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+const views = [];
+let pinned = false;
+let suppressHover = false;
+let ownsHistoryEntry = false;
+let threePromise;
+let frame = 0;
+let lastFrame = 0;
 
-if (trigger && dsOverlay) {
-    let isTouch = false;
-    let isClicked = false;
-
-    trigger.addEventListener('touchstart', (e) => {
-        isTouch = true;
-        e.preventDefault();
-        dsOverlay.classList.toggle('visible');
-    }, { passive: false });
-
-    trigger.addEventListener('mouseenter', () => {
-        if (!isTouch && !isClicked) dsOverlay.classList.add('visible');
-    });
-
-    trigger.addEventListener('mouseleave', () => {
-        if (!isTouch && !isClicked) dsOverlay.classList.remove('visible');
-    });
-    
-    trigger.addEventListener('click', (e) => {
-        if (isTouch) return;
-        e.preventDefault();
-        isClicked = !isClicked;
-        if (isClicked) {
-            dsOverlay.classList.add('visible');
-        } else {
-            dsOverlay.classList.remove('visible');
-        }
-    });
-
-    dsOverlay.addEventListener('click', () => {
-        if (isClicked) {
-            isClicked = false;
-            dsOverlay.classList.remove('visible');
-        }
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => reject(new Error('Script loading timed out')), 20000);
+        script.src = src;
+        script.async = true;
+        script.onload = () => {
+            clearTimeout(timeout);
+            resolve();
+        };
+        script.onerror = () => {
+            clearTimeout(timeout);
+            reject(new Error('Script loading failed'));
+        };
+        document.head.append(script);
     });
 }
+
+function getThree() {
+    if (!threePromise) {
+        threePromise = (async () => {
+            if (!window.THREE) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+            if (!window.THREE.GLTFLoader) await loadScript('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js');
+            return window.THREE;
+        })().catch(() => null);
+    }
+    return threePromise;
+}
+
+class ModelView {
+    constructor(element, host, path, isStar = false) {
+        this.element = element;
+        this.host = host;
+        this.path = path;
+        this.isStar = isStar;
+        this.visible = false;
+        views.push(this);
+        this.observer = new ResizeObserver(() => this.resize());
+        this.observer.observe(element);
+    }
+
+    get active() {
+        return this.visible && this.model && !document.hidden && (this.isStar || !starDialog.open);
+    }
+
+    async init() {
+        if (this.initializing) return;
+        this.initializing = true;
+        const T = await getThree();
+        if (!T) return;
+        this.T = T;
+        try {
+            this.renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
+        } catch {
+            return;
+        }
+        this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
+        this.renderer.outputEncoding = T.sRGBEncoding;
+        this.scene = new T.Scene();
+        this.camera = new T.PerspectiveCamera(this.isStar ? 40 : 35, 1, .1, 100);
+        this.camera.position.set(0, 0, this.isStar ? 8.5 : 6.4);
+        this.scene.add(new T.AmbientLight(0xffffff, this.isStar ? 1.1 : 1.7));
+        const key = new T.DirectionalLight(0xffffff, this.isStar ? 2 : 2.2);
+        key.position.set(-3, 4, 6);
+        this.scene.add(key);
+        const fill = new T.DirectionalLight(this.isStar ? 0xb3cbbb : 0xe0f7da, .8);
+        fill.position.set(4, 0, -2);
+        this.scene.add(fill);
+        this.element.append(this.renderer.domElement);
+        this.renderer.domElement.addEventListener('webglcontextlost', event => {
+            event.preventDefault();
+            this.lost = true;
+            this.host.classList.remove('model-ready');
+            refreshRendering();
+        });
+        this.renderer.domElement.addEventListener('webglcontextrestored', () => {
+            this.lost = false;
+            this.host.classList.add('model-ready');
+            this.resize();
+        });
+        this.resize();
+        const object = await new Promise(resolve => {
+            new T.GLTFLoader().load(this.path, gltf => resolve(gltf.scene), undefined, () => resolve(this.fallback()));
+        });
+        object.updateMatrixWorld(true);
+        let framingTarget = object;
+        if (this.isStar) {
+            object.traverse(node => {
+                if (node.isMesh && /main.?hull/i.test(node.name)) framingTarget = node;
+            });
+        }
+        const box = new T.Box3().setFromObject(framingTarget);
+        const center = box.getCenter(new T.Vector3());
+        const size = box.getSize(new T.Vector3());
+        object.position.sub(center);
+        const pivot = new T.Group();
+        pivot.add(object);
+        pivot.scale.setScalar((this.isStar ? 4.8 : 2.7) / Math.max(size.x, size.y, size.z, .001));
+        pivot.rotation.set(this.isStar ? .08 : -.07, this.isStar ? .3 : -.35, this.isStar ? 0 : -.15);
+        this.model = pivot;
+        this.scene.add(pivot);
+        this.host.classList.add('model-ready');
+        this.resize();
+        refreshRendering();
+    }
+
+    fallback() {
+        const T = this.T;
+        if (!this.isStar) {
+            return new T.Mesh(
+                new T.CylinderGeometry(.8, .8, 2.5, 32),
+                new T.MeshStandardMaterial({ color: 0x871f3b, metalness: .55, roughness: .3 })
+            );
+        }
+        const group = new T.Group();
+        group.add(new T.Mesh(
+            new T.SphereGeometry(2, 48, 32),
+            new T.MeshStandardMaterial({ color: 0x88938d, metalness: .35, roughness: .65 })
+        ));
+        const trench = new T.Mesh(
+            new T.TorusGeometry(2.01, .035, 8, 64),
+            new T.MeshStandardMaterial({ color: 0x303d33 })
+        );
+        trench.rotation.x = Math.PI / 2;
+        group.add(trench);
+        const dish = new T.Mesh(
+            new T.SphereGeometry(.48, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2),
+            new T.MeshStandardMaterial({ color: 0x506457, metalness: .5, roughness: .5 })
+        );
+        dish.position.set(-.7, .7, 1.63);
+        dish.rotation.x = Math.PI / 2;
+        group.add(dish);
+        return group;
+    }
+
+    resize() {
+        if (!this.renderer || this.lost) return;
+        const width = this.element.clientWidth;
+        const height = this.element.clientHeight;
+        if (!width || !height) return;
+        this.camera.aspect = width / height;
+        if (this.isStar) {
+            const halfFov = this.camera.fov * Math.PI / 360;
+            this.camera.position.z = 2.4 / (Math.tan(halfFov) * Math.min(this.camera.aspect, 1) * .72);
+        }
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height, false);
+        if (this.active) this.draw(0);
+    }
+
+    setVisible(value) {
+        this.visible = value;
+        if (value) {
+            this.init();
+            this.resize();
+        }
+        refreshRendering();
+    }
+
+    draw(delta) {
+        if (!this.active || this.lost) return;
+        if (!reducedMotion.matches) this.model.rotation.y += delta * .24;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+const pepperView = new ModelView(document.getElementById('pepper-canvas-container'), pepperCard, 'assets/dr_pepper_can.glb');
+const starView = new ModelView(document.getElementById('death-star-canvas-container'), starDialog, 'assets/death_star.glb', true);
+
+function refreshRendering() {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    lastFrame = 0;
+    if (document.hidden) return;
+    views.forEach(view => view.draw(0));
+    if (!reducedMotion.matches && views.some(view => view.active && !view.lost)) {
+        frame = requestAnimationFrame(renderFrame);
+    }
+}
+
+function renderFrame(time) {
+    frame = 0;
+    if (document.hidden || reducedMotion.matches || !views.some(view => view.active && !view.lost)) return;
+    if (time - lastFrame >= 1000 / 30) {
+        const delta = lastFrame ? Math.min((time - lastFrame) / 1000, .08) : 0;
+        views.forEach(view => view.draw(delta));
+        lastFrame = time;
+    }
+    frame = requestAnimationFrame(renderFrame);
+}
+
+const visibilityObserver = new IntersectionObserver(entries => {
+    pepperView.setVisible(entries[0].isIntersecting);
+});
+visibilityObserver.observe(pepperCard);
+
+function openStar(pin = false) {
+    if (pin && pinned) return;
+    if (pin) {
+        if (starDialog.open) starDialog.close();
+        starDialog.removeAttribute('data-preview');
+        pinned = true;
+        document.body.classList.add('overlay-open');
+        starDialog.showModal();
+        closeButton.focus({ preventScroll: true });
+        if (!history.state?.emeraldDeathStar) {
+            history.pushState({ ...history.state, emeraldDeathStar: true }, '');
+            ownsHistoryEntry = true;
+        }
+    } else {
+        if (starDialog.open || pinned || suppressHover) return;
+        const focused = document.activeElement;
+        starDialog.setAttribute('data-preview', '');
+        starDialog.show();
+        focused?.focus({ preventScroll: true });
+    }
+    trigger.setAttribute('aria-expanded', 'true');
+    starView.setVisible(true);
+}
+
+function closeStar(fromHistory = false) {
+    const wasPinned = pinned;
+    pinned = false;
+    if (starDialog.open) starDialog.close();
+    starDialog.removeAttribute('data-preview');
+    trigger.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('overlay-open');
+    starView.setVisible(false);
+    if (wasPinned) {
+        suppressHover = true;
+        trigger.focus({ preventScroll: true });
+    }
+    if (ownsHistoryEntry && history.state?.emeraldDeathStar && !fromHistory) history.back();
+    ownsHistoryEntry = false;
+}
+
+trigger.addEventListener('pointerenter', event => {
+    if (event.pointerType === 'mouse' && finePointer.matches) openStar();
+});
+trigger.addEventListener('pointerleave', () => {
+    suppressHover = false;
+    if (!pinned) closeStar();
+});
+trigger.addEventListener('click', () => pinned ? closeStar() : openStar(true));
+starDialog.addEventListener('click', () => {
+    if (pinned) closeStar();
+});
+starDialog.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeStar();
+});
+starDialog.addEventListener('close', () => {
+    if (!starDialog.open && pinned) closeStar();
+});
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && starDialog.open) {
+        event.preventDefault();
+        closeStar();
+    }
+});
+window.addEventListener('popstate', () => {
+    if (starDialog.open) closeStar(true);
+    ownsHistoryEntry = false;
+});
 
 const snakeTrigger = document.getElementById('snake-trigger');
 const snakeImg = document.getElementById('snake-img');
-const container = document.querySelector('.container');
-
 let snakeTimeout;
 
-snakeTrigger.onclick = () => {
+function hideFlag() {
+    snakeImg.classList.remove('visible');
+    snakeImg.setAttribute('aria-hidden', 'true');
+    snakeTrigger.setAttribute('aria-expanded', 'false');
+}
+
+snakeTrigger.addEventListener('click', () => {
     snakeImg.classList.add('visible');
-    
-    if (window.innerWidth <= 768) {
-        container.classList.add('flag-active');
-    }
-    
+    snakeImg.setAttribute('aria-hidden', 'false');
+    snakeTrigger.setAttribute('aria-expanded', 'true');
     clearTimeout(snakeTimeout);
-    
-    snakeTimeout = setTimeout(() => { 
-        snakeImg.classList.remove('visible');
-        if (window.innerWidth <= 768) {
-            container.classList.remove('flag-active');
-        }
-    }, 2000);
-};
+    snakeTimeout = setTimeout(hideFlag, 2000);
+});
 
-let idleTime = 0;
 const banan = document.getElementById('john-banan');
-document.addEventListener('mousemove', () => { idleTime = 0; });
-setInterval(() => {
-    idleTime++;
-    if (idleTime > 15) banan.classList.add('active');
-}, 1000);
+let idleTimeout;
+let dismissTimeout;
 
-banan.onclick = () => {
-    banan.style.opacity = '0';
-    banan.style.transform = 'translateX(-50%) translateY(-100px)';
-    setTimeout(() => { 
-        banan.classList.remove('active'); 
-        banan.style.opacity = '1'; 
-        banan.style.transform = 'translateX(-50%)';
-        idleTime = 0;
-    }, 600);
-};
+function resetIdle() {
+    clearTimeout(idleTimeout);
+    if (document.hidden || starDialog.open || banan.classList.contains('active')) return;
+    idleTimeout = setTimeout(() => {
+        if (document.hidden || starDialog.open) return;
+        banan.classList.add('active');
+        banan.tabIndex = 0;
+        banan.setAttribute('aria-hidden', 'false');
+    }, 16000);
+}
 
-init3D();
-animate();
+for (const event of ['pointermove', 'pointerdown', 'keydown', 'scroll']) {
+    document.addEventListener(event, resetIdle, { passive: true });
+}
+banan.addEventListener('click', () => {
+    banan.classList.remove('active');
+    banan.tabIndex = -1;
+    banan.setAttribute('aria-hidden', 'true');
+    clearTimeout(dismissTimeout);
+    dismissTimeout = setTimeout(resetIdle, 600);
+});
+document.addEventListener('visibilitychange', () => {
+    document.documentElement.toggleAttribute('data-paused', document.hidden);
+    refreshRendering();
+    resetIdle();
+});
+reducedMotion.addEventListener('change', refreshRendering);
+window.addEventListener('pageshow', () => {
+    if (starDialog.open) closeStar();
+    resetIdle();
+});
+resetIdle();
